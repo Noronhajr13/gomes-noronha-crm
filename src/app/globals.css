@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  /* CRM Input */
+  .crm-input {
+    @apply w-full px-4 py-3 bg-crm-bg-surface border border-crm-border rounded-lg text-crm-text-primary placeholder-crm-text-muted focus:outline-none focus:border-crm-border-focus focus:ring-1 focus:ring-crm-border-focus transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* CRM Buttons */
+  .crm-button-primary {
+    @apply px-4 py-3 bg-crm-accent hover:bg-crm-accent-hover text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .crm-button-secondary {
+    @apply px-4 py-3 bg-crm-bg-surface border border-crm-border hover:bg-crm-bg-hover text-crm-text-primary font-medium rounded-lg transition-colors;
+  }
+
+  .crm-button-ghost {
+    @apply px-4 py-3 hover:bg-crm-bg-hover text-crm-text-secondary font-medium rounded-lg transition-colors;
+  }
+
+  /* CRM Badges */
+  .crm-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .crm-badge-success {
+    @apply bg-crm-accent/20 text-green-400;
+  }
+
+  .crm-badge-warning {
+    @apply bg-crm-accent-yellow/20 text-yellow-400;
+  }
+
+  .crm-badge-danger {
+    @apply bg-crm-accent-red/20 text-red-400;
+  }
+
+  .crm-badge-info {
+    @apply bg-crm-accent-blue/20 text-blue-400;
+  }
+
+  /* CRM Card */
+  .crm-card {
+    @apply bg-crm-bg-surface border border-crm-border rounded-lg p-6;
+  }
+
+  /* CRM Table */
+  .crm-table {
+    @apply w-full text-sm text-left;
+  }
+
+  .crm-table thead {
+    @apply text-xs text-crm-text-muted uppercase bg-crm-bg-elevated;
+  }
+
+  .crm-table th {
+    @apply px-6 py-3;
+  }
+
+  .crm-table td {
+    @apply px-6 py-4 border-t border-crm-border;
+  }
+
+  .crm-table tbody tr {
+    @apply hover:bg-crm-bg-hover transition-colors;
+  }
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0F14;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363D;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #484F58;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-in-out;
+}
