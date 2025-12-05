@@ -17,135 +17,126 @@ import {
   FileText
 } from 'lucide-react'
 import { useState } from 'react'
-import { cn } from '@/lib/utils'
 
 interface SidebarProps {
   user: {
     name?: string | null
     email?: string | null
-    role: string
+    role?: string
   }
 }
 
 const menuItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Imóveis', href: '/imoveis', icon: Building2 },
-  { name: 'Atendimentos', href: '/atendimentos', icon: Headphones },
-  { name: 'Leads', href: '/leads', icon: Users },
-  { name: 'Tarefas', href: '/tarefas', icon: Calendar },
-  { name: 'Relatórios', href: '/relatorios', icon: BarChart3 },
-  { name: 'Documentos', href: '/documentos', icon: FileText },
+  { icon: Home, label: 'Dashboard', href: '/dashboard' },
+  { icon: Building2, label: 'Imóveis', href: '/imoveis' },
+  { icon: Headphones, label: 'Atendimentos', href: '/atendimentos' },
+  { icon: Users, label: 'Leads', href: '/leads' },
+  { icon: Calendar, label: 'Tarefas', href: '/tarefas' },
+  { icon: BarChart3, label: 'Relatórios', href: '/relatorios' },
+  { icon: FileText, label: 'Documentos', href: '/documentos' },
 ]
+
+const getRoleLabel = (role?: string) => {
+  switch (role) {
+    case 'ADMIN': return 'Administrador'
+    case 'BROKER': return 'Corretor'
+    case 'DISPATCHER': return 'Despachante'
+    default: return 'Usuário'
+  }
+}
 
 export default function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
-  const isActive = (href: string) => {
-    if (href === '/dashboard') return pathname === '/dashboard'
-    return pathname.startsWith(href)
-  }
-
   return (
-    <aside className={cn(
-      "fixed left-0 top-0 h-screen bg-crm-bg-secondary border-r border-crm-border flex flex-col transition-all duration-300 z-40",
-      collapsed ? "w-16" : "w-64"
-    )}>
+    <aside className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-200 z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'} hidden lg:block`}>
       {/* Logo */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-crm-border">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200">
         {!collapsed && (
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-crm-accent rounded-lg flex items-center justify-center flex-shrink-0">
-              <Home className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-semibold text-crm-text-primary text-sm">Gomes & Noronha</span>
-          </div>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <span className="text-xl font-bold text-[#DDA76A]">G&N</span>
+            <span className="text-sm text-gray-600">CRM</span>
+          </Link>
         )}
         {collapsed && (
-          <div className="w-9 h-9 bg-crm-accent rounded-lg flex items-center justify-center mx-auto">
-            <Home className="w-5 h-5 text-white" />
-          </div>
+          <Link href="/dashboard" className="mx-auto">
+            <span className="text-xl font-bold text-[#DDA76A]">G&N</span>
+          </Link>
         )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
+        >
+          {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+        </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 py-4 px-2 overflow-y-auto">
-        <ul className="space-y-1">
-          {menuItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                  isActive(item.href)
-                    ? "bg-crm-accent text-white"
-                    : "text-crm-text-muted hover:bg-crm-bg-hover hover:text-crm-text-primary",
-                  collapsed && "justify-center px-2"
-                )}
-                title={collapsed ? item.name : undefined}
-              >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
-                {!collapsed && <span>{item.name}</span>}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      {/* Menu */}
+      <nav className="p-4 space-y-1">
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                isActive
+                  ? 'bg-[#DDA76A] text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              } ${collapsed ? 'justify-center' : ''}`}
+              title={collapsed ? item.label : undefined}
+            >
+              <item.icon size={20} />
+              {!collapsed && <span className="font-medium">{item.label}</span>}
+            </Link>
+          )
+        })}
       </nav>
 
       {/* User Section */}
-      <div className="border-t border-crm-border p-4">
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
         {!collapsed ? (
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-crm-bg-hover flex items-center justify-center flex-shrink-0">
-              <span className="text-sm font-medium text-crm-text-primary">
-                {user.name?.charAt(0).toUpperCase()}
-              </span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#DDA76A]/10 flex items-center justify-center">
+                <span className="text-[#DDA76A] font-semibold">
+                  {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-800 truncate">{user.name || 'Usuário'}</p>
+                <p className="text-xs text-gray-500">{getRoleLabel(user.role)}</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-crm-text-primary truncate">{user.name}</p>
-              <p className="text-xs text-crm-text-muted truncate">{user.role}</p>
-            </div>
-            <div className="flex items-center gap-1">
+            <div className="flex gap-2">
               <Link
                 href="/configuracoes"
-                className="p-1.5 text-crm-text-muted hover:text-crm-text-primary hover:bg-crm-bg-hover rounded transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <Settings className="w-4 h-4" />
+                <Settings size={16} />
+                Configurações
               </Link>
               <button
                 onClick={() => signOut({ callbackUrl: '/login' })}
-                className="p-1.5 text-crm-text-muted hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
-                title="Sair"
+                className="flex items-center justify-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut size={16} />
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-crm-bg-hover flex items-center justify-center">
-              <span className="text-sm font-medium text-crm-text-primary">
-                {user.name?.charAt(0).toUpperCase()}
-              </span>
-            </div>
+          <div className="space-y-2">
             <button
               onClick={() => signOut({ callbackUrl: '/login' })}
-              className="p-1.5 text-crm-text-muted hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
+              className="w-full flex items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               title="Sair"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut size={20} />
             </button>
           </div>
         )}
       </div>
-
-      {/* Collapse Toggle */}
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-20 w-6 h-6 bg-crm-bg-elevated border border-crm-border rounded-full flex items-center justify-center text-crm-text-muted hover:text-crm-text-primary transition-colors"
-      >
-        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-      </button>
     </aside>
   )
 }

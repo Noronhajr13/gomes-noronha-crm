@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Sidebar from './Sidebar'
 import TopBar from './TopBar'
-import { cn } from '@/lib/utils'
 
 interface CRMLayoutProps {
   children: React.ReactNode
@@ -12,7 +11,7 @@ interface CRMLayoutProps {
   user: {
     name?: string | null
     email?: string | null
-    role: string
+    role?: string
   }
 }
 
@@ -20,17 +19,19 @@ export default function CRMLayout({ children, title, subtitle, user }: CRMLayout
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-crm-bg-primary">
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <Sidebar user={user} />
 
       {/* Main Content */}
       <div className="lg:pl-64 transition-all duration-300">
         <TopBar 
-          title={title} 
+          title={title}
           subtitle={subtitle}
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         />
+
+        {/* Page Content */}
         <main className="p-6">
           {children}
         </main>
