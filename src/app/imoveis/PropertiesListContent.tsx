@@ -34,7 +34,7 @@ interface PropertiesListContentProps {
   user: {
     name?: string | null
     email?: string | null
-    role: string
+    role?: string
   }
 }
 

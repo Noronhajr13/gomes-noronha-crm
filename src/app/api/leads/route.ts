@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status')
     const source = searchParams.get('source')
     const userId = searchParams.get('userId')
+    const search = searchParams.get('search')
     
     // Paginação
     const page = parseInt(searchParams.get('page') || '1')
@@ -32,6 +33,13 @@ export async function GET(request: NextRequest) {
     if (status) where.status = status
     if (source) where.source = source
     if (userId) where.userId = userId
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search, mode: 'insensitive' } },
+      ]
+    }
 
     const [leads, total] = await Promise.all([
       prisma.lead.findMany({
@@ -76,16 +84,30 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/leads - Criar lead (público - do site)
+// POST /api/leads - Criar lead
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
-    const { name, email, phone, message, propertyId, source = 'SITE' } = data
+    const { 
+      name, 
+      email, 
+      phone, 
+      cpf,
+      message, 
+      propertyId, 
+      userId,
+      source = 'SITE',
+      status = 'NOVO',
+      budget,
+      interestType,
+      preferredNeighborhoods,
+      score = 50
+    } = data
 
-    if (!name || !email || !phone) {
+    if (!name) {
       return NextResponse.json(
-        { error: 'Nome, email e telefone são obrigatórios' },
+        { error: 'Nome é obrigatório' },
         { status: 400 }
       )
     }
@@ -93,14 +115,33 @@ export async function POST(request: NextRequest) {
     const lead = await prisma.lead.create({
       data: {
         name,
-        email,
-        phone,
-        message,
+        email: email || null,
+        phone: phone || null,
+        cpf: cpf || null,
+        message: message || null,
         source,
+        status,
+        budget: budget || null,
+        interestType: interestType || null,
+        preferredNeighborhoods: preferredNeighborhoods || [],
+        score: score || 50,
         propertyId: propertyId || null,
-        status: 'NOVO'
+        userId: userId || null,
       }
     })
+
+    // Se há sessão, registrar atividade
+    const session = await getServerSession(authOptions)
+    if (session?.user?.id) {
+      await prisma.activity.create({
+        data: {
+          type: 'LEAD_CRIADO',
+          description: `Lead ${name} criado`,
+          userId: session.user.id,
+          leadId: lead.id,
+        }
+      })
+    }
 
     return NextResponse.json(lead, { status: 201 })
   } catch (error) {
