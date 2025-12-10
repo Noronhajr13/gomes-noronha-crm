@@ -147,7 +147,7 @@ const visitStatusColors: Record<string, string> = {
   REALIZADA: 'bg-emerald-100 text-emerald-800',
   CANCELADA: 'bg-red-100 text-red-800',
   REMARCADA: 'bg-amber-100 text-amber-800',
-  NAO_COMPARECEU: 'bg-gray-100 text-gray-800',
+  NAO_COMPARECEU: 'bg-crm-bg-hover text-crm-text-primary',
 }
 
 export default function AttendanceDetailContent({ lead, user }: Props) {
@@ -257,18 +257,18 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
           <div className="flex items-center gap-4">
             <Link
               href="/atendimentos"
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 text-crm-text-muted hover:text-crm-text-secondary hover:bg-crm-bg-hover rounded-lg transition-colors"
             >
               <ArrowLeftIcon className="w-5 h-5" />
             </Link>
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900">{lead.name}</h1>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[lead.status] || 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[lead.status] || 'bg-crm-bg-hover text-crm-text-primary'}`}>
                   {statusLabels[lead.status] || lead.status}
                 </span>
               </div>
-              <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+              <div className="flex items-center gap-4 mt-1 text-sm text-crm-text-muted">
                 <span>Criado em {formatDate(lead.createdAt)}</span>
                 <span>•</span>
                 <span>Origem: {sourceLabels[lead.source] || lead.source}</span>
@@ -283,7 +283,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowStatusModal(true)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-crm-text-secondary bg-crm-bg-surface border border-crm-border rounded-lg hover:bg-crm-bg-elevated"
             >
               Alterar Status
             </button>
@@ -338,7 +338,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-crm-border mb-6">
           <nav className="flex gap-6">
             {tabs.map((tab) => (
               <button
@@ -347,7 +347,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                 className={`flex items-center gap-2 pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
                     ? 'border-amber-500 text-amber-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-crm-text-muted hover:text-crm-text-secondary'
                 }`}
               >
                 <tab.icon className="w-5 h-5" />
@@ -363,42 +363,42 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
             {/* Main Info */}
             <div className="lg:col-span-2 space-y-6">
               {/* Contact Info */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações de Contato</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <UserIcon className="w-5 h-5 text-gray-600" />
+                    <div className="p-2 bg-crm-bg-hover rounded-lg">
+                      <UserIcon className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Nome</p>
+                      <p className="text-xs text-crm-text-muted">Nome</p>
                       <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <PhoneIcon className="w-5 h-5 text-gray-600" />
+                    <div className="p-2 bg-crm-bg-hover rounded-lg">
+                      <PhoneIcon className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Telefone</p>
+                      <p className="text-xs text-crm-text-muted">Telefone</p>
                       <p className="text-sm font-medium text-gray-900">{formatPhone(lead.phone)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <EnvelopeIcon className="w-5 h-5 text-gray-600" />
+                    <div className="p-2 bg-crm-bg-hover rounded-lg">
+                      <EnvelopeIcon className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">E-mail</p>
+                      <p className="text-xs text-crm-text-muted">E-mail</p>
                       <p className="text-sm font-medium text-gray-900">{lead.email || 'Não informado'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <DocumentTextIcon className="w-5 h-5 text-gray-600" />
+                    <div className="p-2 bg-crm-bg-hover rounded-lg">
+                      <DocumentTextIcon className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">CPF</p>
+                      <p className="text-xs text-crm-text-muted">CPF</p>
                       <p className="text-sm font-medium text-gray-900">{lead.cpf || 'Não informado'}</p>
                     </div>
                   </div>
@@ -406,15 +406,15 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
               </div>
 
               {/* Interest Info */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Interesse</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <HomeIcon className="w-5 h-5 text-gray-600" />
+                    <div className="p-2 bg-crm-bg-hover rounded-lg">
+                      <HomeIcon className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Tipo de Interesse</p>
+                      <p className="text-xs text-crm-text-muted">Tipo de Interesse</p>
                       <p className="text-sm font-medium text-gray-900">
                         {lead.interestType === 'COMPRA' ? 'Compra' : 
                          lead.interestType === 'ALUGUEL' ? 'Aluguel' : 
@@ -423,11 +423,11 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <CurrencyDollarIcon className="w-5 h-5 text-gray-600" />
+                    <div className="p-2 bg-crm-bg-hover rounded-lg">
+                      <CurrencyDollarIcon className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Orçamento</p>
+                      <p className="text-xs text-crm-text-muted">Orçamento</p>
                       <p className="text-sm font-medium text-gray-900">{formatCurrency(lead.budget)}</p>
                     </div>
                   </div>
@@ -435,12 +435,12 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
 
                 {lead.preferredNeighborhoods && lead.preferredNeighborhoods.length > 0 && (
                   <div className="mt-4">
-                    <p className="text-xs text-gray-500 mb-2">Bairros de Preferência</p>
+                    <p className="text-xs text-crm-text-muted mb-2">Bairros de Preferência</p>
                     <div className="flex flex-wrap gap-2">
                       {lead.preferredNeighborhoods.map((neighborhood, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                          className="px-3 py-1 bg-crm-bg-hover text-crm-text-secondary rounded-full text-sm"
                         >
                           {neighborhood}
                         </span>
@@ -451,8 +451,8 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
 
                 {lead.message && (
                   <div className="mt-4">
-                    <p className="text-xs text-gray-500 mb-2">Mensagem</p>
-                    <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs text-crm-text-muted mb-2">Mensagem</p>
+                    <p className="text-sm text-crm-text-secondary bg-crm-bg-elevated p-3 rounded-lg">
                       {lead.message}
                     </p>
                   </div>
@@ -464,7 +464,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
             <div className="space-y-6">
               {/* Property Card */}
               {lead.property && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Imóvel de Interesse</h3>
                   <Link href={`/imoveis/${lead.property.id}`} className="block group">
                     {lead.property.images && lead.property.images[0] && (
@@ -482,7 +482,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                     <p className="font-medium text-gray-900 group-hover:text-amber-600 transition-colors">
                       {lead.property.title}
                     </p>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-crm-text-muted mt-1">
                       {lead.property.neighborhood}, {lead.property.city}
                     </p>
                     <p className="text-lg font-bold text-amber-600 mt-2">
@@ -494,7 +494,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
 
               {/* Assigned User */}
               {lead.user && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Corretor Responsável</h3>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
@@ -504,30 +504,30 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">{lead.user.name || 'Sem nome'}</p>
-                      <p className="text-sm text-gray-500">{lead.user.email}</p>
+                      <p className="text-sm text-crm-text-muted">{lead.user.email}</p>
                     </div>
                   </div>
                 </div>
               )}
 
               {/* Timeline Summary */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumo</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Criado em</span>
+                    <span className="text-crm-text-muted">Criado em</span>
                     <span className="font-medium text-gray-900">{formatDate(lead.createdAt)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Última atualização</span>
+                    <span className="text-crm-text-muted">Última atualização</span>
                     <span className="font-medium text-gray-900">{formatDate(lead.updatedAt)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Atividades</span>
+                    <span className="text-crm-text-muted">Atividades</span>
                     <span className="font-medium text-gray-900">{lead.activities.length}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Visitas</span>
+                    <span className="text-crm-text-muted">Visitas</span>
                     <span className="font-medium text-gray-900">{lead.visits.length}</span>
                   </div>
                 </div>
@@ -537,7 +537,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
         )}
 
         {activeTab === 'activities' && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Histórico de Atividades</h3>
               <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100">
@@ -548,8 +548,8 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
 
             {lead.activities.length === 0 ? (
               <div className="text-center py-12">
-                <ClockIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">Nenhuma atividade registrada</p>
+                <ClockIcon className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
+                <p className="text-crm-text-muted">Nenhuma atividade registrada</p>
               </div>
             ) : (
               <div className="relative">
@@ -560,16 +560,16 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                       <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center z-10">
                         <ClockIcon className="w-4 h-4 text-amber-600" />
                       </div>
-                      <div className="flex-1 bg-gray-50 rounded-lg p-4">
+                      <div className="flex-1 bg-crm-bg-elevated rounded-lg p-4">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-medium text-gray-900">
                             {activityTypeLabels[activity.type] || activity.type}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-crm-text-muted">
                             {getTimeAgo(activity.createdAt)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">{activity.description}</p>
+                        <p className="text-sm text-crm-text-secondary">{activity.description}</p>
                       </div>
                     </div>
                   ))}
@@ -580,7 +580,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
         )}
 
         {activeTab === 'visits' && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Visitas Agendadas</h3>
               <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100">
@@ -591,33 +591,33 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
 
             {lead.visits.length === 0 ? (
               <div className="text-center py-12">
-                <CalendarIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">Nenhuma visita agendada</p>
+                <CalendarIcon className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
+                <p className="text-crm-text-muted">Nenhuma visita agendada</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {lead.visits.map((visit) => (
                   <div
                     key={visit.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-crm-bg-elevated rounded-lg"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="p-2 bg-white rounded-lg shadow-sm">
-                        <CalendarIcon className="w-5 h-5 text-gray-600" />
+                      <div className="p-2 bg-crm-bg-surface rounded-lg shadow-sm">
+                        <CalendarIcon className="w-5 h-5 text-crm-text-secondary" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">
                           {formatDateTime(visit.scheduledAt)}
                         </p>
                         {visit.notes && (
-                          <p className="text-sm text-gray-500 mt-1">{visit.notes}</p>
+                          <p className="text-sm text-crm-text-muted mt-1">{visit.notes}</p>
                         )}
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          visitStatusColors[visit.status] || 'bg-gray-100 text-gray-800'
+                          visitStatusColors[visit.status] || 'bg-crm-bg-hover text-crm-text-primary'
                         }`}
                       >
                         {visitStatusLabels[visit.status] || visit.status}
@@ -634,21 +634,21 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
       {/* Delete Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+          <div className="bg-crm-bg-surface rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">
                 <ExclamationTriangleIcon className="w-6 h-6 text-red-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Excluir Atendimento</h3>
             </div>
-            <p className="text-gray-600 mb-6">
+            <p className="text-crm-text-secondary mb-6">
               Tem certeza que deseja excluir o atendimento de <strong>{lead.name}</strong>? 
               Esta ação não pode ser desfeita.
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                className="px-4 py-2 text-sm font-medium text-crm-text-secondary bg-crm-bg-hover rounded-lg hover:bg-gray-200"
               >
                 Cancelar
               </button>
@@ -667,7 +667,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
       {/* Status Modal */}
       {showStatusModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+          <div className="bg-crm-bg-surface rounded-xl p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Alterar Status</h3>
             <div className="space-y-2 mb-6">
               {Object.entries(statusLabels).map(([value, label]) => (
@@ -677,7 +677,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                     newStatus === value
                       ? 'border-amber-500 bg-amber-50 text-amber-700'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-crm-border hover:border-crm-border'
                   }`}
                 >
                   <span className={`inline-block w-2 h-2 rounded-full mr-3 ${statusColors[value]?.split(' ')[0] || 'bg-gray-300'}`} />
@@ -688,7 +688,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowStatusModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                className="px-4 py-2 text-sm font-medium text-crm-text-secondary bg-crm-bg-hover rounded-lg hover:bg-gray-200"
               >
                 Cancelar
               </button>

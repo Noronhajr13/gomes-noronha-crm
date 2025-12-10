@@ -239,7 +239,7 @@ export default function PropertyEditContent({ property, user }: Props) {
 
   const inputClass = (field: string) => `
     w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent
-    ${errors[field] ? 'border-red-500' : 'border-gray-300'}
+    ${errors[field] ? 'border-red-500' : 'border-crm-border'}
   `
 
   return (
@@ -248,7 +248,7 @@ export default function PropertyEditContent({ property, user }: Props) {
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <Link 
           href={`/imoveis/${property.id}`}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
+          className="flex items-center gap-2 text-crm-text-secondary hover:text-crm-text-primary"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -259,7 +259,7 @@ export default function PropertyEditContent({ property, user }: Props) {
         <div className="flex gap-3">
           <button
             onClick={() => router.push(`/imoveis/${property.id}`)}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-6 py-2 border border-crm-border text-crm-text-secondary rounded-lg hover:bg-crm-bg-elevated transition-colors"
           >
             Cancelar
           </button>
@@ -289,8 +289,8 @@ export default function PropertyEditContent({ property, user }: Props) {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        <div className="border-b border-gray-200">
+      <div className="bg-crm-bg-surface rounded-xl shadow-sm overflow-hidden">
+        <div className="border-b border-crm-border">
           <nav className="flex overflow-x-auto">
             {tabs.map(tab => (
               <button
@@ -299,7 +299,7 @@ export default function PropertyEditContent({ property, user }: Props) {
                 className={`px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
                   activeTab === tab.id
                     ? 'border-[#DDA76A] text-[#DDA76A]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-crm-text-muted hover:text-crm-text-secondary'
                 }`}
               >
                 {tab.label}
@@ -313,7 +313,7 @@ export default function PropertyEditContent({ property, user }: Props) {
           {activeTab === 'info' && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Título do Imóvel *</label>
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">Título do Imóvel *</label>
                 <input
                   type="text"
                   value={formData.title}
@@ -325,12 +325,12 @@ export default function PropertyEditContent({ property, user }: Props) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Código do Imóvel</label>
-                <input type="text" value={formData.code} disabled className={`${inputClass('code')} bg-gray-50`} />
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">Código do Imóvel</label>
+                <input type="text" value={formData.code} disabled className={`${inputClass('code')} bg-crm-bg-elevated`} />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">Descrição</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
@@ -342,7 +342,7 @@ export default function PropertyEditContent({ property, user }: Props) {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Tipo do Imóvel</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Tipo do Imóvel</label>
                   <select value={formData.type} onChange={(e) => handleInputChange('type', e.target.value)} className={inputClass('type')}>
                     <option value="CASA">Casa</option>
                     <option value="APARTAMENTO">Apartamento</option>
@@ -359,7 +359,7 @@ export default function PropertyEditContent({ property, user }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Transação</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Tipo de Transação</label>
                   <select value={formData.transactionType} onChange={(e) => handleInputChange('transactionType', e.target.value)} className={inputClass('transactionType')}>
                     <option value="VENDA">Venda</option>
                     <option value="ALUGUEL">Aluguel</option>
@@ -367,7 +367,7 @@ export default function PropertyEditContent({ property, user }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Status</label>
                   <select value={formData.status} onChange={(e) => handleInputChange('status', e.target.value)} className={inputClass('status')}>
                     <option value="DISPONIVEL">Disponível</option>
                     <option value="RESERVADO">Reservado</option>
@@ -384,11 +384,11 @@ export default function PropertyEditContent({ property, user }: Props) {
           {activeTab === 'values' && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">
                   {formData.transactionType === 'ALUGUEL' ? 'Valor do Aluguel *' : 'Preço de Venda *'}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
                   <input
                     type="text"
                     value={formatCurrency(formData.price)}
@@ -401,9 +401,9 @@ export default function PropertyEditContent({ property, user }: Props) {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Condomínio</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Condomínio</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
                     <input
                       type="text"
                       value={formatCurrency(formData.condominiumFee)}
@@ -414,9 +414,9 @@ export default function PropertyEditContent({ property, user }: Props) {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">IPTU (anual)</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">IPTU (anual)</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
                     <input
                       type="text"
                       value={formatCurrency(formData.iptu)}
@@ -435,38 +435,38 @@ export default function PropertyEditContent({ property, user }: Props) {
             <div className="space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Área (m²) *</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Área (m²) *</label>
                   <input type="number" value={formData.area} onChange={(e) => handleInputChange('area', e.target.value)} className={inputClass('area')} min="0" step="0.01" />
                   {errors.area && <p className="mt-1 text-sm text-red-500">{errors.area}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Quartos</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Quartos</label>
                   <input type="number" value={formData.bedrooms} onChange={(e) => handleInputChange('bedrooms', e.target.value)} className={inputClass('bedrooms')} min="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Banheiros</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Banheiros</label>
                   <input type="number" value={formData.bathrooms} onChange={(e) => handleInputChange('bathrooms', e.target.value)} className={inputClass('bathrooms')} min="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Suítes</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Suítes</label>
                   <input type="number" value={formData.suites} onChange={(e) => handleInputChange('suites', e.target.value)} className={inputClass('suites')} min="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Vagas</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Vagas</label>
                   <input type="number" value={formData.parking} onChange={(e) => handleInputChange('parking', e.target.value)} className={inputClass('parking')} min="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Ano</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Ano</label>
                   <input type="number" value={formData.yearBuilt} onChange={(e) => handleInputChange('yearBuilt', e.target.value)} className={inputClass('yearBuilt')} min="1900" max={new Date().getFullYear()} />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Comodidades</label>
+                <label className="block text-sm font-medium text-crm-text-secondary mb-3">Comodidades</label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {amenitiesList.map(amenity => (
-                    <label key={amenity} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${formData.amenities.includes(amenity) ? 'border-[#DDA76A] bg-[#DDA76A]/10' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <label key={amenity} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${formData.amenities.includes(amenity) ? 'border-[#DDA76A] bg-[#DDA76A]/10' : 'border-crm-border hover:border-crm-border'}`}>
                       <input type="checkbox" checked={formData.amenities.includes(amenity)} onChange={() => handleAmenityToggle(amenity)} className="rounded text-[#DDA76A] focus:ring-[#DDA76A]" />
-                      <span className="text-sm text-gray-700">{amenity}</span>
+                      <span className="text-sm text-crm-text-secondary">{amenity}</span>
                     </label>
                   ))}
                 </div>
@@ -479,41 +479,41 @@ export default function PropertyEditContent({ property, user }: Props) {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">CEP</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">CEP</label>
                   <div className="flex gap-2">
                     <input type="text" value={formData.zipCode} onChange={(e) => handleInputChange('zipCode', e.target.value.replace(/\D/g, '').slice(0, 8))} className={`${inputClass('zipCode')} flex-1`} placeholder="00000-000" maxLength={9} />
-                    <button type="button" onClick={handleCepSearch} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">Buscar</button>
+                    <button type="button" onClick={handleCepSearch} className="px-4 py-2 bg-crm-bg-hover text-crm-text-secondary rounded-lg hover:bg-gray-200 transition-colors">Buscar</button>
                   </div>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Endereço *</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Endereço *</label>
                   <input type="text" value={formData.address} onChange={(e) => handleInputChange('address', e.target.value)} className={inputClass('address')} placeholder="Rua, Avenida..." />
                   {errors.address && <p className="mt-1 text-sm text-red-500">{errors.address}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Número</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Número</label>
                   <input type="text" value={formData.addressNumber} onChange={(e) => handleInputChange('addressNumber', e.target.value)} className={inputClass('addressNumber')} placeholder="123" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Complemento</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Complemento</label>
                   <input type="text" value={formData.complement} onChange={(e) => handleInputChange('complement', e.target.value)} className={inputClass('complement')} placeholder="Apto, Bloco..." />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Bairro *</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Bairro *</label>
                   <input type="text" value={formData.neighborhood} onChange={(e) => handleInputChange('neighborhood', e.target.value)} className={inputClass('neighborhood')} placeholder="Centro" />
                   {errors.neighborhood && <p className="mt-1 text-sm text-red-500">{errors.neighborhood}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Cidade *</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Cidade *</label>
                   <input type="text" value={formData.city} onChange={(e) => handleInputChange('city', e.target.value)} className={inputClass('city')} placeholder="São Paulo" />
                   {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Estado *</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Estado *</label>
                   <select value={formData.state} onChange={(e) => handleInputChange('state', e.target.value)} className={inputClass('state')}>
                     <option value="">Selecione</option>
                     <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option>
@@ -534,18 +534,18 @@ export default function PropertyEditContent({ property, user }: Props) {
           {activeTab === 'media' && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Imagens</label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <svg className="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">Imagens</label>
+                <div className="border-2 border-dashed border-crm-border rounded-lg p-8 text-center">
+                  <svg className="w-12 h-12 mx-auto text-crm-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <p className="text-gray-500 mb-2">Upload de imagens em breve</p>
-                  <p className="text-sm text-gray-400">Arraste e solte ou clique para selecionar</p>
+                  <p className="text-crm-text-muted mb-2">Upload de imagens em breve</p>
+                  <p className="text-sm text-crm-text-muted">Arraste e solte ou clique para selecionar</p>
                 </div>
                 {formData.images.length > 0 && (
                   <div className="mt-4 grid grid-cols-4 gap-4">
                     {formData.images.map((img, index) => (
-                      <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                      <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-crm-bg-hover">
                         <img src={img} alt={`Imagem ${index + 1}`} className="w-full h-full object-cover" />
                       </div>
                     ))}
@@ -553,11 +553,11 @@ export default function PropertyEditContent({ property, user }: Props) {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">URL do Vídeo</label>
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">URL do Vídeo</label>
                 <input type="url" value={formData.videoUrl} onChange={(e) => handleInputChange('videoUrl', e.target.value)} className={inputClass('videoUrl')} placeholder="https://youtube.com/watch?v=..." />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">URL do Tour Virtual</label>
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">URL do Tour Virtual</label>
                 <input type="url" value={formData.virtualTour} onChange={(e) => handleInputChange('virtualTour', e.target.value)} className={inputClass('virtualTour')} placeholder="https://matterport.com/..." />
               </div>
             </div>
@@ -566,24 +566,24 @@ export default function PropertyEditContent({ property, user }: Props) {
           {/* Tab: Destaques */}
           {activeTab === 'highlights' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-4 p-4 bg-crm-bg-elevated rounded-lg">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={formData.featured} onChange={(e) => handleInputChange('featured', e.target.checked)} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#DDA76A]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#DDA76A]"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#DDA76A]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-crm-bg-surface after:border-crm-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#DDA76A]"></div>
                 </label>
                 <div>
-                  <h3 className="font-medium text-gray-800">⭐ Imóvel em Destaque</h3>
-                  <p className="text-sm text-gray-500">Este imóvel aparecerá em destaque no site</p>
+                  <h3 className="font-medium text-crm-text-primary">⭐ Imóvel em Destaque</h3>
+                  <p className="text-sm text-crm-text-muted">Este imóvel aparecerá em destaque no site</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-4 p-4 bg-crm-bg-elevated rounded-lg">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={formData.exclusive} onChange={(e) => handleInputChange('exclusive', e.target.checked)} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#DDA76A]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#DDA76A]"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#DDA76A]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-crm-bg-surface after:border-crm-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#DDA76A]"></div>
                 </label>
                 <div>
-                  <h3 className="font-medium text-gray-800">🔒 Imóvel Exclusivo</h3>
-                  <p className="text-sm text-gray-500">Este imóvel é exclusivo da Gomes &amp; Noronha</p>
+                  <h3 className="font-medium text-crm-text-primary">🔒 Imóvel Exclusivo</h3>
+                  <p className="text-sm text-crm-text-muted">Este imóvel é exclusivo da Gomes &amp; Noronha</p>
                 </div>
               </div>
             </div>

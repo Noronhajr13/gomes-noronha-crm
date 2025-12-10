@@ -19,15 +19,16 @@ export default function CRMLayout({ children, title, subtitle, user }: CRMLayout
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-crm-bg-primary">
       {/* Sidebar */}
-      <Sidebar user={user} />
+      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
       <div className="lg:pl-64 transition-all duration-300">
         <TopBar 
           title={title}
           subtitle={subtitle}
+          user={user}
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         />
 
@@ -40,7 +41,7 @@ export default function CRMLayout({ children, title, subtitle, user }: CRMLayout
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}

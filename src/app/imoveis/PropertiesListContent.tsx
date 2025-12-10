@@ -109,7 +109,7 @@ const statusColors: Record<string, string> = {
   RESERVADO: 'bg-yellow-500/20 text-yellow-400',
   VENDIDO: 'bg-blue-500/20 text-blue-400',
   ALUGADO: 'bg-purple-500/20 text-purple-400',
-  INATIVO: 'bg-gray-500/20 text-gray-400',
+  INATIVO: 'bg-crm-bg-elevated0/20 text-crm-text-muted',
 }
 
 function formatCurrency(value: number): string {
@@ -244,7 +244,7 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
             <Filter className="w-4 h-4" />
             Filtros
             {hasActiveFilters && (
-              <span className="w-5 h-5 rounded-full bg-white text-crm-accent text-xs flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-crm-bg-surface text-crm-accent text-xs flex items-center justify-center">
                 {Object.values(filters).filter(v => v !== '').length}
               </span>
             )}
@@ -519,7 +519,7 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                   </div>
                   <span className={cn(
                     "px-2 py-0.5 text-xs rounded whitespace-nowrap",
-                    statusColors[property.status] || 'bg-gray-500/20 text-gray-400'
+                    statusColors[property.status] || 'bg-crm-bg-elevated0/20 text-crm-text-muted'
                   )}>
                     {property.status}
                   </span>
@@ -664,7 +664,7 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                   <td className="p-3">
                     <span className={cn(
                       "px-2 py-0.5 text-xs rounded",
-                      statusColors[property.status] || 'bg-gray-500/20 text-gray-400'
+                      statusColors[property.status] || 'bg-crm-bg-elevated0/20 text-crm-text-muted'
                     )}>
                       {property.status}
                     </span>

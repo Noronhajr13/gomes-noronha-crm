@@ -216,27 +216,27 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
         <div className="flex items-center gap-4 mb-6">
           <Link
             href={`/atendimentos/${lead.id}`}
-            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-crm-text-muted hover:text-crm-text-secondary hover:bg-crm-bg-hover rounded-lg transition-colors"
           >
             <ArrowLeftIcon className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Editar Atendimento</h1>
-            <p className="text-sm text-gray-500 mt-1">Atualize os dados do atendimento de {lead.name}</p>
+            <p className="text-sm text-crm-text-muted mt-1">Atualize os dados do atendimento de {lead.name}</p>
           </div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Contact Info */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <UserIcon className="w-5 h-5 text-amber-500" />
               Informações de Contato
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Nome <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -245,12 +245,12 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   placeholder="Nome completo"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   E-mail
                 </label>
                 <input
@@ -258,12 +258,12 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   placeholder="email@exemplo.com"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Telefone
                 </label>
                 <input
@@ -271,12 +271,12 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="phone"
                   value={formatPhone(formData.phone)}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/\D/g, '') }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   placeholder="(00) 00000-0000"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   CPF
                 </label>
                 <input
@@ -285,7 +285,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formatCPF(formData.cpf)}
                   onChange={(e) => setFormData(prev => ({ ...prev, cpf: e.target.value.replace(/\D/g, '') }))}
                   maxLength={14}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   placeholder="000.000.000-00"
                 />
               </div>
@@ -293,14 +293,14 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
           </div>
 
           {/* Status and Source */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <DocumentTextIcon className="w-5 h-5 text-amber-500" />
               Status e Origem
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Status <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -308,7 +308,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formData.status}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 >
                   {statusOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -318,7 +318,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Origem <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -326,7 +326,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formData.source}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 >
                   {sourceOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -336,7 +336,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Score (0-100)
                 </label>
                 <div className="flex items-center gap-2">
@@ -349,28 +349,28 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                     max="100"
                     className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
                   />
-                  <span className="w-12 text-center font-medium text-gray-700">{formData.score}</span>
+                  <span className="w-12 text-center font-medium text-crm-text-secondary">{formData.score}</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Interest Info */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <HomeIcon className="w-5 h-5 text-amber-500" />
               Interesse
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Tipo de Interesse
                 </label>
                 <select
                   name="interestType"
                   value={formData.interestType}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 >
                   {interestTypeOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -380,7 +380,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Orçamento
                 </label>
                 <input
@@ -388,14 +388,14 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="budget"
                   value={formData.budget ? formatCurrency(formData.budget) : ''}
                   onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value.replace(/\D/g, '') }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   placeholder="R$ 0,00"
                 />
               </div>
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                 Bairros de Preferência
               </label>
               <div className="flex gap-2 mb-2">
@@ -404,7 +404,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={neighborhoodInput}
                   onChange={(e) => setNeighborhoodInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNeighborhood())}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="flex-1 px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   placeholder="Digite um bairro e pressione Enter"
                 />
                 <button
@@ -420,13 +420,13 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   {formData.preferredNeighborhoods.map((neighborhood, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-crm-bg-hover text-crm-text-secondary rounded-full text-sm"
                     >
                       {neighborhood}
                       <button
                         type="button"
                         onClick={() => handleRemoveNeighborhood(neighborhood)}
-                        className="ml-1 text-gray-400 hover:text-red-500"
+                        className="ml-1 text-crm-text-muted hover:text-red-500"
                       >
                         ×
                       </button>
@@ -437,7 +437,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                 Mensagem
               </label>
               <textarea
@@ -445,28 +445,28 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 placeholder="Mensagem ou observações do cliente..."
               />
             </div>
           </div>
 
           {/* Assignment */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <StarIcon className="w-5 h-5 text-amber-500" />
               Atribuição
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Imóvel de Interesse
                 </label>
                 <select
                   name="propertyId"
                   value={formData.propertyId}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 >
                   <option value="">Selecione um imóvel...</option>
                   {properties.map(property => (
@@ -477,14 +477,14 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                   Corretor Responsável
                 </label>
                 <select
                   name="userId"
                   value={formData.userId}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 >
                   <option value="">Selecione um corretor...</option>
                   {users.map(u => (
@@ -501,7 +501,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
           <div className="flex justify-end gap-4">
             <Link
               href={`/atendimentos/${lead.id}`}
-              className="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 font-medium"
+              className="px-6 py-3 text-crm-text-secondary bg-crm-bg-hover rounded-lg hover:bg-gray-200 font-medium"
             >
               Cancelar
             </Link>

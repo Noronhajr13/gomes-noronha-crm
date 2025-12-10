@@ -113,7 +113,7 @@ const getStatusColor = (status: string) => {
     case 'NEGOCIACAO': return 'bg-indigo-100 text-indigo-800 border-indigo-200'
     case 'FECHADO_GANHO': return 'bg-green-100 text-green-800 border-green-200'
     case 'FECHADO_PERDIDO': return 'bg-red-100 text-red-800 border-red-200'
-    default: return 'bg-gray-100 text-gray-800 border-gray-200'
+    default: return 'bg-crm-bg-hover text-crm-text-primary border-crm-border'
   }
 }
 
@@ -305,62 +305,62 @@ export default function LeadsContent({ user }: LeadsContentProps) {
     <CRMLayout title="Leads" subtitle="Gestão de leads e funil de vendas" user={user}>
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <Users className="text-blue-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
-              <p className="text-sm text-gray-500">Total Leads</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{stats.total}</p>
+              <p className="text-sm text-crm-text-muted">Total Leads</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center">
               <User className="text-cyan-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{stats.novos}</p>
-              <p className="text-sm text-gray-500">Novos</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{stats.novos}</p>
+              <p className="text-sm text-crm-text-muted">Novos</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
               <Target className="text-purple-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{stats.qualificados}</p>
-              <p className="text-sm text-gray-500">Qualificados</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{stats.qualificados}</p>
+              <p className="text-sm text-crm-text-muted">Qualificados</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
               <Star className="text-green-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{stats.convertidos}</p>
-              <p className="text-sm text-gray-500">Convertidos</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{stats.convertidos}</p>
+              <p className="text-sm text-crm-text-muted">Convertidos</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
               <TrendingUp className="text-amber-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{stats.taxaConversao}%</p>
-              <p className="text-sm text-gray-500">Taxa Conversão</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{stats.taxaConversao}%</p>
+              <p className="text-sm text-crm-text-muted">Taxa Conversão</p>
             </div>
           </div>
         </div>
@@ -371,13 +371,13 @@ export default function LeadsContent({ user }: LeadsContentProps) {
         <div className="flex flex-col sm:flex-row gap-3 flex-1">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-crm-text-muted" size={20} />
             <input
               type="text"
               placeholder="Buscar por nome, email ou telefone..."
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-[#DDA76A]/50 focus:border-transparent"
             />
           </div>
 
@@ -385,7 +385,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
           <select
             value={filters.source}
             onChange={(e) => handleFilterChange('source', e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent"
+            className="px-3 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-[#DDA76A]/50 focus:border-transparent"
           >
             {sourceOptions.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -395,7 +395,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
           <select
             value={filters.status}
             onChange={(e) => handleFilterChange('status', e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent"
+            className="px-3 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-[#DDA76A]/50 focus:border-transparent"
           >
             {statusOptions.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -405,7 +405,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-800"
+              className="flex items-center gap-1 px-3 py-2 text-sm text-crm-text-secondary hover:text-crm-text-primary"
             >
               <X size={16} />
               Limpar
@@ -417,7 +417,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
           {/* Export */}
           <button
             onClick={exportToCSV}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 border border-crm-border rounded-lg text-crm-text-secondary hover:bg-crm-bg-elevated transition-colors"
           >
             <Download size={20} />
             <span className="hidden sm:inline">Exportar</span>
@@ -437,19 +437,19 @@ export default function LeadsContent({ user }: LeadsContentProps) {
       {/* Selected Actions */}
       {selectedLeads.length > 0 && (
         <div className="mb-4 p-3 bg-[#DDA76A]/10 border border-[#DDA76A]/30 rounded-lg flex items-center justify-between">
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-crm-text-secondary">
             {selectedLeads.length} lead(s) selecionado(s)
           </span>
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="px-3 py-1 text-sm bg-crm-bg-surface border border-crm-border rounded-lg hover:bg-crm-bg-elevated">
               Alterar Status
             </button>
-            <button className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="px-3 py-1 text-sm bg-crm-bg-surface border border-crm-border rounded-lg hover:bg-crm-bg-elevated">
               Atribuir Corretor
             </button>
             <button 
               onClick={() => setSelectedLeads([])}
-              className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+              className="px-3 py-1 text-sm text-crm-text-secondary hover:text-crm-text-primary"
             >
               Cancelar
             </button>
@@ -458,16 +458,16 @@ export default function LeadsContent({ user }: LeadsContentProps) {
       )}
 
       {/* Leads Table */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-crm-bg-surface rounded-xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-[#DDA76A]" />
           </div>
         ) : leads.length === 0 ? (
           <div className="text-center py-12">
-            <Users className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-800 mb-2">Nenhum lead encontrado</h3>
-            <p className="text-gray-500 mb-4">
+            <Users className="w-16 h-16 mx-auto text-crm-text-disabled mb-4" />
+            <h3 className="text-lg font-medium text-crm-text-primary mb-2">Nenhum lead encontrado</h3>
+            <p className="text-crm-text-muted mb-4">
               {hasActiveFilters ? 'Tente ajustar os filtros' : 'Comece adicionando um novo lead'}
             </p>
             <Link
@@ -481,13 +481,13 @@ export default function LeadsContent({ user }: LeadsContentProps) {
         ) : (
           <>
             {/* Table Header */}
-            <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-500">
+            <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-crm-bg-elevated border-b border-crm-border text-sm font-medium text-crm-text-muted">
               <div className="col-span-1 flex items-center">
                 <input
                   type="checkbox"
                   checked={selectedLeads.length === leads.length && leads.length > 0}
                   onChange={toggleSelectAll}
-                  className="w-4 h-4 rounded border-gray-300 text-[#DDA76A] focus:ring-[#DDA76A]"
+                  className="w-4 h-4 rounded border-crm-border text-[#DDA76A] focus:ring-[#DDA76A]/50"
                 />
               </div>
               <div className="col-span-3">Lead</div>
@@ -503,7 +503,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
               {leads.map((lead) => (
                 <div 
                   key={lead.id} 
-                  className={`hover:bg-gray-50 transition-colors ${selectedLeads.includes(lead.id) ? 'bg-[#DDA76A]/5' : ''}`}
+                  className={`hover:bg-crm-bg-elevated transition-colors ${selectedLeads.includes(lead.id) ? 'bg-[#DDA76A]/5' : ''}`}
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 px-6 py-4 items-center">
                     {/* Checkbox */}
@@ -512,7 +512,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                         type="checkbox"
                         checked={selectedLeads.includes(lead.id)}
                         onChange={() => toggleSelectLead(lead.id)}
-                        className="w-4 h-4 rounded border-gray-300 text-[#DDA76A] focus:ring-[#DDA76A]"
+                        className="w-4 h-4 rounded border-crm-border text-[#DDA76A] focus:ring-[#DDA76A]/50"
                       />
                     </div>
 
@@ -527,11 +527,11 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                         <div className="min-w-0">
                           <Link 
                             href={`/atendimentos/${lead.id}`}
-                            className="font-medium text-gray-800 hover:text-[#DDA76A] truncate block"
+                            className="font-medium text-crm-text-primary hover:text-[#DDA76A] truncate block"
                           >
                             {lead.name}
                           </Link>
-                          <div className="flex items-center gap-3 text-sm text-gray-500">
+                          <div className="flex items-center gap-3 text-sm text-crm-text-muted">
                             <span className="flex items-center gap-1">
                               <Phone size={12} />
                               {lead.phone}
@@ -542,8 +542,8 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                     </div>
 
                     {/* Origem */}
-                    <div className="lg:col-span-2 text-sm text-gray-600">
-                      <span className="px-2 py-1 bg-gray-100 rounded text-xs">
+                    <div className="lg:col-span-2 text-sm text-crm-text-secondary">
+                      <span className="px-2 py-1 bg-crm-bg-hover rounded text-xs">
                         {getSourceLabel(lead.source)}
                       </span>
                     </div>
@@ -563,12 +563,12 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                     </div>
 
                     {/* Data */}
-                    <div className="lg:col-span-2 text-sm text-gray-500">
+                    <div className="lg:col-span-2 text-sm text-crm-text-muted">
                       <div className="flex items-center gap-1">
                         <Calendar size={14} />
                         <span>{formatDate(lead.createdAt)}</span>
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-crm-text-muted">
                         {getTimeAgo(lead.createdAt)} atrás
                       </div>
                     </div>
@@ -577,23 +577,23 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                     <div className="lg:col-span-1 flex justify-end relative">
                       <button
                         onClick={() => setShowActions(showActions === lead.id ? null : lead.id)}
-                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2 text-crm-text-muted hover:text-crm-text-secondary hover:bg-crm-bg-hover rounded-lg transition-colors"
                       >
                         <MoreVertical size={20} />
                       </button>
                       
                       {showActions === lead.id && (
-                        <div className="absolute right-0 top-10 z-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
+                        <div className="absolute right-0 top-10 z-10 w-48 bg-crm-bg-surface rounded-lg shadow-lg border border-crm-border py-1">
                           <Link
                             href={`/atendimentos/${lead.id}`}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-crm-text-secondary hover:bg-crm-bg-elevated"
                           >
                             <Eye size={16} />
                             Ver Detalhes
                           </Link>
                           <Link
                             href={`/atendimentos/${lead.id}/editar`}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-crm-text-secondary hover:bg-crm-bg-elevated"
                           >
                             <Edit size={16} />
                             Editar
@@ -602,7 +602,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                             href={`https://wa.me/55${lead.phone.replace(/\D/g, '')}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-crm-text-secondary hover:bg-crm-bg-elevated"
                           >
                             <MessageSquare size={16} />
                             WhatsApp
@@ -628,8 +628,8 @@ export default function LeadsContent({ user }: LeadsContentProps) {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-                <p className="text-sm text-gray-500">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-crm-border">
+                <p className="text-sm text-crm-text-muted">
                   Mostrando {((pagination.page - 1) * pagination.limit) + 1} a{' '}
                   {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total} leads
                 </p>
@@ -637,7 +637,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                   <button
                     onClick={() => setPagination(p => ({ ...p, page: p.page - 1 }))}
                     disabled={pagination.page === 1}
-                    className="p-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="p-2 border border-crm-border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-crm-bg-elevated"
                   >
                     <ChevronLeft size={20} />
                   </button>
@@ -647,7 +647,7 @@ export default function LeadsContent({ user }: LeadsContentProps) {
                   <button
                     onClick={() => setPagination(p => ({ ...p, page: p.page + 1 }))}
                     disabled={pagination.page === pagination.totalPages}
-                    className="p-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="p-2 border border-crm-border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-crm-bg-elevated"
                   >
                     <ChevronRight size={20} />
                   </button>

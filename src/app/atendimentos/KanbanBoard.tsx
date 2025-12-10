@@ -126,20 +126,20 @@ export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps)
                 <h3 className="font-semibold text-white text-sm">
                   {column.label}
                 </h3>
-                <span className="bg-white/20 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                <span className="bg-crm-bg-surface/20 text-white text-xs font-medium px-2 py-0.5 rounded-full">
                   {columnLeads.length}
                 </span>
               </div>
             </div>
 
             {/* Cards Container */}
-            <div className="bg-gray-100 rounded-b-lg p-2 min-h-[500px] space-y-2">
+            <div className="bg-crm-bg-hover rounded-b-lg p-2 min-h-[500px] space-y-2">
               {columnLeads.map((lead) => (
                 <div
                   key={lead.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, lead.id)}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 cursor-move hover:shadow-md transition-shadow"
+                  className="bg-crm-bg-surface rounded-lg shadow-sm border border-crm-border p-3 cursor-move hover:shadow-md transition-shadow"
                 >
                   {/* Lead Header */}
                   <div className="flex items-start justify-between mb-2">
@@ -160,13 +160,13 @@ export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps)
                   {/* Contact Info */}
                   <div className="space-y-1 mb-3">
                     {lead.phone && (
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-crm-text-muted">
                         <Phone className="w-3 h-3" />
                         <span className="truncate">{lead.phone}</span>
                       </div>
                     )}
                     {lead.email && (
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-crm-text-muted">
                         <Mail className="w-3 h-3" />
                         <span className="truncate">{lead.email}</span>
                       </div>
@@ -175,8 +175,8 @@ export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps)
 
                   {/* Property */}
                   {lead.property && (
-                    <div className="bg-gray-50 rounded px-2 py-1 mb-2">
-                      <p className="text-xs text-gray-600 truncate">
+                    <div className="bg-crm-bg-elevated rounded px-2 py-1 mb-2">
+                      <p className="text-xs text-crm-text-secondary truncate">
                         🏠 {lead.property.code || lead.property.title}
                       </p>
                     </div>
@@ -194,11 +194,11 @@ export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps)
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">
+                      <span className="text-[10px] px-1.5 py-0.5 bg-crm-bg-hover text-crm-text-secondary rounded">
                         {sourceLabels[lead.source] || lead.source}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 text-[10px] text-gray-400">
+                    <div className="flex items-center gap-1 text-[10px] text-crm-text-muted">
                       <Calendar className="w-3 h-3" />
                       {formatDate(lead.createdAt)}
                     </div>
@@ -231,7 +231,7 @@ export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps)
               ))}
 
               {columnLeads.length === 0 && (
-                <div className="text-center py-8 text-gray-400 text-sm">
+                <div className="text-center py-8 text-crm-text-muted text-sm">
                   Nenhum lead
                 </div>
               )}

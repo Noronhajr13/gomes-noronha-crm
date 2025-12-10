@@ -614,7 +614,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                     <div className={cn(
                       "w-4 h-4 rounded border flex items-center justify-center flex-shrink-0",
                       formData.amenities.includes(amenity)
-                        ? "bg-white border-white"
+                        ? "bg-crm-bg-surface border-white"
                         : "border-crm-border"
                     )}>
                       {formData.amenities.includes(amenity) && (
@@ -848,7 +848,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                     formData.featured ? "bg-yellow-500" : "bg-crm-bg-hover"
                   )}>
                     <div className={cn(
-                      "absolute top-1 w-4 h-4 rounded-full bg-white transition-all",
+                      "absolute top-1 w-4 h-4 rounded-full bg-crm-bg-surface transition-all",
                       formData.featured ? "left-7" : "left-1"
                     )} />
                   </div>
@@ -883,7 +883,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                     formData.exclusive ? "bg-purple-500" : "bg-crm-bg-hover"
                   )}>
                     <div className={cn(
-                      "absolute top-1 w-4 h-4 rounded-full bg-white transition-all",
+                      "absolute top-1 w-4 h-4 rounded-full bg-crm-bg-surface transition-all",
                       formData.exclusive ? "left-7" : "left-1"
                     )} />
                   </div>

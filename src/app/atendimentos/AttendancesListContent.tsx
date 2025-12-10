@@ -105,7 +105,7 @@ const getStatusColor = (status: string) => {
     case 'NEGOCIACAO': return 'bg-indigo-100 text-indigo-800'
     case 'FECHADO_GANHO': return 'bg-green-100 text-green-800'
     case 'FECHADO_PERDIDO': return 'bg-red-100 text-red-800'
-    default: return 'bg-gray-100 text-gray-800'
+    default: return 'bg-crm-bg-hover text-crm-text-primary'
   }
 }
 
@@ -257,13 +257,13 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-[280px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-crm-text-muted" size={20} />
             <input
               type="text"
               placeholder="Buscar por nome, email ou telefone..."
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-[#DDA76A]/50 focus:border-transparent"
             />
           </div>
 
@@ -273,7 +273,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
             className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${
               showFilters || hasActiveFilters
                 ? 'border-[#DDA76A] text-[#DDA76A] bg-[#DDA76A]/10'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                : 'border-crm-border text-crm-text-secondary hover:bg-crm-bg-elevated'
             }`}
           >
             <Filter size={20} />
@@ -286,13 +286,13 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
           </button>
 
           {/* View Toggle */}
-          <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+          <div className="flex items-center border border-crm-border rounded-lg overflow-hidden">
             <button
               onClick={() => setViewMode('list')}
               className={`flex items-center gap-1 px-3 py-2 text-sm transition-colors ${
                 viewMode === 'list'
                   ? 'bg-[#DDA76A] text-white'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  : 'text-crm-text-secondary hover:bg-crm-bg-elevated'
               }`}
             >
               <List size={18} />
@@ -303,7 +303,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
               className={`flex items-center gap-1 px-3 py-2 text-sm transition-colors ${
                 viewMode === 'kanban'
                   ? 'bg-[#DDA76A] text-white'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  : 'text-crm-text-secondary hover:bg-crm-bg-elevated'
               }`}
             >
               <LayoutGrid size={18} />
@@ -323,9 +323,9 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
 
       {/* Filters Panel */}
       {showFilters && (
-        <div className="mb-6 p-4 bg-white rounded-xl shadow-sm">
+        <div className="mb-6 p-4 bg-crm-bg-surface rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-medium text-gray-800">Filtros</h3>
+            <h3 className="font-medium text-crm-text-primary">Filtros</h3>
             {hasActiveFilters && (
               <button onClick={clearFilters} className="text-sm text-[#DDA76A] hover:underline">
                 Limpar filtros
@@ -334,11 +334,11 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Origem</label>
+              <label className="block text-sm font-medium text-crm-text-secondary mb-1">Origem</label>
               <select
                 value={filters.source}
                 onChange={(e) => handleFilterChange('source', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent"
+                className="w-full px-3 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-[#DDA76A]/50 focus:border-transparent"
               >
                 {sourceOptions.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -346,11 +346,11 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <label className="block text-sm font-medium text-crm-text-secondary mb-1">Status</label>
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent"
+                className="w-full px-3 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-[#DDA76A]/50 focus:border-transparent"
               >
                 {statusOptions.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -363,49 +363,49 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <User className="text-blue-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{newLeads.length}</p>
-              <p className="text-sm text-gray-500">Novos</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{newLeads.length}</p>
+              <p className="text-sm text-crm-text-muted">Novos</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
               <Clock className="text-amber-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{inProgressLeads.length}</p>
-              <p className="text-sm text-gray-500">Em Andamento</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{inProgressLeads.length}</p>
+              <p className="text-sm text-crm-text-muted">Em Andamento</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
               <MessageSquare className="text-purple-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">{negotiationLeads.length}</p>
-              <p className="text-sm text-gray-500">Negociação</p>
+              <p className="text-2xl font-bold text-crm-text-primary">{negotiationLeads.length}</p>
+              <p className="text-sm text-crm-text-muted">Negociação</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
               <Star className="text-green-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-800">
+              <p className="text-2xl font-bold text-crm-text-primary">
                 {closedLeads.filter(l => l.status === 'FECHADO_GANHO').length}
               </p>
-              <p className="text-sm text-gray-500">Fechados</p>
+              <p className="text-sm text-crm-text-muted">Fechados</p>
             </div>
           </div>
         </div>
@@ -415,16 +415,16 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
       {viewMode === 'kanban' ? (
         <KanbanBoard leads={leads} onUpdateStatus={handleUpdateStatus} />
       ) : (
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-crm-bg-surface rounded-xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-[#DDA76A]" />
           </div>
         ) : leads.length === 0 ? (
           <div className="text-center py-12">
-            <User className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-800 mb-2">Nenhum atendimento encontrado</h3>
-            <p className="text-gray-500 mb-4">
+            <User className="w-16 h-16 mx-auto text-crm-text-disabled mb-4" />
+            <h3 className="text-lg font-medium text-crm-text-primary mb-2">Nenhum atendimento encontrado</h3>
+            <p className="text-crm-text-muted mb-4">
               {hasActiveFilters ? 'Tente ajustar os filtros de busca' : 'Comece adicionando um novo atendimento'}
             </p>
             <Link
@@ -438,7 +438,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
         ) : (
           <>
             {/* Table Header */}
-            <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-500">
+            <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-crm-bg-elevated border-b border-crm-border text-sm font-medium text-crm-text-muted">
               <div className="col-span-3">Cliente</div>
               <div className="col-span-2">Origem</div>
               <div className="col-span-2">Status</div>
@@ -450,7 +450,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
             {/* Table Body */}
             <div className="divide-y divide-gray-200">
               {leads.map((lead) => (
-                <div key={lead.id} className="hover:bg-gray-50 transition-colors">
+                <div key={lead.id} className="hover:bg-crm-bg-elevated transition-colors">
                   <Link href={`/atendimentos/${lead.id}`} className="block">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 px-6 py-4 items-center">
                       {/* Cliente */}
@@ -462,8 +462,8 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
                             </span>
                           </div>
                           <div className="min-w-0">
-                            <p className="font-medium text-gray-800 truncate">{lead.name}</p>
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <p className="font-medium text-crm-text-primary truncate">{lead.name}</p>
+                            <div className="flex items-center gap-2 text-sm text-crm-text-muted">
                               <Phone size={12} />
                               <span className="truncate">{lead.phone}</span>
                             </div>
@@ -472,7 +472,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
                       </div>
 
                       {/* Origem */}
-                      <div className="lg:col-span-2 flex items-center gap-2 text-sm text-gray-600">
+                      <div className="lg:col-span-2 flex items-center gap-2 text-sm text-crm-text-secondary">
                         {getSourceIcon(lead.source)}
                         <span>{getSourceLabel(lead.source)}</span>
                       </div>
@@ -487,17 +487,17 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
                       {/* Imóvel */}
                       <div className="lg:col-span-2 text-sm">
                         {lead.property ? (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-crm-text-secondary">
                             <Building2 size={14} />
                             <span className="truncate">{lead.property.code}</span>
                           </div>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-crm-text-muted">-</span>
                         )}
                       </div>
 
                       {/* Data */}
-                      <div className="lg:col-span-2 text-sm text-gray-500">
+                      <div className="lg:col-span-2 text-sm text-crm-text-muted">
                         <div className="flex items-center gap-1">
                           <Calendar size={14} />
                           <span>{getTimeAgo(lead.createdAt)}</span>
@@ -508,7 +508,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
                       <div className="lg:col-span-1 flex justify-end" onClick={(e) => e.preventDefault()}>
                         <Link 
                           href={`/atendimentos/${lead.id}`}
-                          className="p-2 text-gray-400 hover:text-[#DDA76A] hover:bg-gray-100 rounded-lg transition-colors"
+                          className="p-2 text-crm-text-muted hover:text-[#DDA76A] hover:bg-crm-bg-hover rounded-lg transition-colors"
                         >
                           <ArrowRight size={20} />
                         </Link>
@@ -521,8 +521,8 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-                <p className="text-sm text-gray-500">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-crm-border">
+                <p className="text-sm text-crm-text-muted">
                   Mostrando {((pagination.page - 1) * pagination.limit) + 1} a{' '}
                   {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total} resultados
                 </p>
@@ -530,7 +530,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
                   <button
                     onClick={() => setPagination(p => ({ ...p, page: p.page - 1 }))}
                     disabled={pagination.page === 1}
-                    className="p-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="p-2 border border-crm-border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-crm-bg-elevated"
                   >
                     <ChevronLeft size={20} />
                   </button>
@@ -540,7 +540,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
                   <button
                     onClick={() => setPagination(p => ({ ...p, page: p.page + 1 }))}
                     disabled={pagination.page === pagination.totalPages}
-                    className="p-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="p-2 border border-crm-border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-crm-bg-elevated"
                   >
                     <ChevronRight size={20} />
                   </button>

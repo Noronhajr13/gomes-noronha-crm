@@ -71,7 +71,7 @@ const priorityLabels: Record<string, string> = {
 }
 
 const priorityColors: Record<string, string> = {
-  BAIXA: 'bg-gray-100 text-gray-700',
+  BAIXA: 'bg-crm-bg-hover text-crm-text-secondary',
   MEDIA: 'bg-blue-100 text-blue-700',
   ALTA: 'bg-orange-100 text-orange-700',
   URGENTE: 'bg-red-100 text-red-700',
@@ -88,7 +88,7 @@ const statusColors: Record<string, string> = {
   PENDENTE: 'bg-amber-100 text-amber-700',
   EM_ANDAMENTO: 'bg-blue-100 text-blue-700',
   CONCLUIDA: 'bg-green-100 text-green-700',
-  CANCELADA: 'bg-gray-100 text-gray-500',
+  CANCELADA: 'bg-crm-bg-hover text-crm-text-muted',
 }
 
 const typeLabels: Record<string, string> = {
@@ -261,7 +261,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Tarefas</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-crm-text-muted mt-1">
               Gerencie suas tarefas e atividades
             </p>
           </div>
@@ -276,76 +276,76 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <DocumentTextIcon className="w-5 h-5 text-gray-600" />
+              <div className="p-2 bg-crm-bg-hover rounded-lg">
+                <DocumentTextIcon className="w-5 h-5 text-crm-text-secondary" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                <p className="text-xs text-gray-500">Total</p>
+                <p className="text-xs text-crm-text-muted">Total</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-amber-100 rounded-lg">
                 <ClockIcon className="w-5 h-5 text-amber-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-amber-600">{stats.pendentes}</p>
-                <p className="text-xs text-gray-500">Pendentes</p>
+                <p className="text-xs text-crm-text-muted">Pendentes</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <ArrowPathIcon className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-600">{stats.emAndamento}</p>
-                <p className="text-xs text-gray-500">Em Andamento</p>
+                <p className="text-xs text-crm-text-muted">Em Andamento</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 rounded-lg">
                 <CheckCircleIcon className="w-5 h-5 text-green-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-600">{stats.concluidas}</p>
-                <p className="text-xs text-gray-500">Concluídas</p>
+                <p className="text-xs text-crm-text-muted">Concluídas</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-red-100 rounded-lg">
                 <ExclamationTriangleIcon className="w-5 h-5 text-red-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-red-600">{stats.atrasadas}</p>
-                <p className="text-xs text-gray-500">Atrasadas</p>
+                <p className="text-xs text-crm-text-muted">Atrasadas</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+        <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-wrap items-center gap-4">
             {/* Search */}
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-crm-text-muted" />
                 <input
                   type="text"
                   placeholder="Buscar tarefas..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full pl-10 pr-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
             </div>
@@ -354,7 +354,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              className="px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="">Todos os Status</option>
               {Object.entries(statusLabels).map(([value, label]) => (
@@ -366,7 +366,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              className="px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="">Todas as Prioridades</option>
               {Object.entries(priorityLabels).map(([value, label]) => (
@@ -378,7 +378,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              className="px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="">Todos os Tipos</option>
               {Object.entries(typeLabels).map(([value, label]) => (
@@ -391,12 +391,12 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
         {/* Tasks List */}
         <div className="space-y-3">
           {filteredTasks.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-              <DocumentTextIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+              <DocumentTextIcon className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 Nenhuma tarefa encontrada
               </h3>
-              <p className="text-gray-500 mb-4">
+              <p className="text-crm-text-muted mb-4">
                 {search || statusFilter || priorityFilter || typeFilter
                   ? 'Tente ajustar os filtros'
                   : 'Crie sua primeira tarefa para começar'}
@@ -417,7 +417,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
               return (
                 <div
                   key={task.id}
-                  className={`bg-white rounded-xl shadow-sm border p-4 hover:shadow-md transition-shadow ${
+                  className={`bg-crm-bg-surface rounded-xl shadow-sm border p-4 hover:shadow-md transition-shadow ${
                     task.status === 'CONCLUIDA' ? 'opacity-60' : ''
                   } ${overdue ? 'border-red-200 bg-red-50/30' : 'border-gray-100'}`}
                 >
@@ -431,7 +431,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                       className={`mt-1 flex-shrink-0 ${
                         task.status === 'CONCLUIDA'
                           ? 'text-green-500'
-                          : 'text-gray-300 hover:text-green-500'
+                          : 'text-crm-text-disabled hover:text-green-500'
                       }`}
                     >
                       {task.status === 'CONCLUIDA' ? (
@@ -447,13 +447,13 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                         <div>
                           <h3 className={`font-medium ${
                             task.status === 'CONCLUIDA' 
-                              ? 'text-gray-500 line-through' 
+                              ? 'text-crm-text-muted line-through' 
                               : 'text-gray-900'
                           }`}>
                             {task.title}
                           </h3>
                           {task.description && (
-                            <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                            <p className="text-sm text-crm-text-muted mt-1 line-clamp-2">
                               {task.description}
                             </p>
                           )}
@@ -463,7 +463,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleDeleteTask(task.id)}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                            className="p-2 text-crm-text-muted hover:text-red-500 hover:bg-red-50 rounded-lg"
                           >
                             <TrashIcon className="w-4 h-4" />
                           </button>
@@ -473,7 +473,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                       {/* Meta Info */}
                       <div className="flex flex-wrap items-center gap-3 mt-3">
                         {/* Type */}
-                        <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <div className="flex items-center gap-1 text-sm text-crm-text-muted">
                           <TaskIcon type={task.type} />
                           <span>{typeLabels[task.type]}</span>
                         </div>
@@ -481,7 +481,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                         {/* Due Date */}
                         {task.dueDate && (
                           <div className={`flex items-center gap-1 text-sm ${
-                            overdue ? 'text-red-600 font-medium' : 'text-gray-500'
+                            overdue ? 'text-red-600 font-medium' : 'text-crm-text-muted'
                           }`}>
                             <CalendarIcon className="w-4 h-4" />
                             <span>
@@ -503,7 +503,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                         )}
 
                         {/* Assignee */}
-                        <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <div className="flex items-center gap-1 text-sm text-crm-text-muted">
                           <UserIcon className="w-4 h-4" />
                           <span>{task.user?.name || 'Sem responsável'}</span>
                         </div>
@@ -530,58 +530,58 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
       {/* New Task Modal */}
       {showNewTaskModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-crm-bg-surface rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Nova Tarefa</h2>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                     Título <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={newTask.title}
                     onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     placeholder="Ex: Ligar para cliente"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                     Descrição
                   </label>
                   <textarea
                     value={newTask.description}
                     onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                     rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     placeholder="Detalhes da tarefa..."
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                       Data de Vencimento
                     </label>
                     <input
                       type="datetime-local"
                       value={newTask.dueDate}
                       onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                       Prioridade
                     </label>
                     <select
                       value={newTask.priority}
                       onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     >
                       {Object.entries(priorityLabels).map(([value, label]) => (
                         <option key={value} value={value}>{label}</option>
@@ -592,13 +592,13 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                       Tipo
                     </label>
                     <select
                       value={newTask.type}
                       onChange={(e) => setNewTask({ ...newTask, type: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     >
                       {Object.entries(typeLabels).map(([value, label]) => (
                         <option key={value} value={value}>{label}</option>
@@ -607,13 +607,13 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-crm-text-secondary mb-1">
                       Responsável
                     </label>
                     <select
                       value={newTask.userId}
                       onChange={(e) => setNewTask({ ...newTask, userId: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     >
                       <option value="">Selecione...</option>
                       {users.map(u => (
@@ -627,7 +627,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={() => setShowNewTaskModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-4 py-2 text-crm-text-secondary bg-crm-bg-hover rounded-lg hover:bg-gray-200"
                 >
                   Cancelar
                 </button>
