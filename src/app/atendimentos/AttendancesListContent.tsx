@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import KanbanBoard from './KanbanBoard'
 import Link from 'next/link'
 import { CRMLayout } from '@/components/layout'
 import {
@@ -22,7 +23,9 @@ import {
   Eye,
   Trash2,
   Star,
-  ArrowRight
+  ArrowRight,
+  LayoutGrid,
+  List
 } from 'lucide-react'
 
 interface AttendancesListContentProps {
@@ -166,6 +169,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [showFilters, setShowFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<'list' | 'kanban'>('list')
   const [filters, setFilters] = useState<Filters>({
     search: '',
     source: '',
@@ -222,6 +226,24 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
 
   const hasActiveFilters = filters.source || filters.status
 
+  // Atualizar status do lead (para Kanban)
+  const handleUpdateStatus = useCallback(async (leadId: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/leads/${leadId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+      if (response.ok) {
+        setLeads(prev => prev.map(lead => 
+          lead.id === leadId ? { ...lead, status: newStatus } : lead
+        ))
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error)
+    }
+  }, [])
+
   // Agrupar leads por status para visualização em Kanban (simplificado)
   const newLeads = leads.filter(l => l.status === 'NOVO')
   const inProgressLeads = leads.filter(l => ['CONTATO_REALIZADO', 'QUALIFICADO', 'VISITA_AGENDADA'].includes(l.status))
@@ -262,6 +284,32 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
               </span>
             )}
           </button>
+
+          {/* View Toggle */}
+          <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`flex items-center gap-1 px-3 py-2 text-sm transition-colors ${
+                viewMode === 'list'
+                  ? 'bg-[#DDA76A] text-white'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <List size={18} />
+              <span className="hidden sm:inline">Lista</span>
+            </button>
+            <button
+              onClick={() => setViewMode('kanban')}
+              className={`flex items-center gap-1 px-3 py-2 text-sm transition-colors ${
+                viewMode === 'kanban'
+                  ? 'bg-[#DDA76A] text-white'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <LayoutGrid size={18} />
+              <span className="hidden sm:inline">Kanban</span>
+            </button>
+          </div>
         </div>
 
         <Link
@@ -363,7 +411,10 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
         </div>
       </div>
 
-      {/* Leads List */}
+      {/* View Content */}
+      {viewMode === 'kanban' ? (
+        <KanbanBoard leads={leads} onUpdateStatus={handleUpdateStatus} />
+      ) : (
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
@@ -499,6 +550,7 @@ export default function AttendancesListContent({ user }: AttendancesListContentP
           </>
         )}
       </div>
+      )}
     </CRMLayout>
   )
 }
