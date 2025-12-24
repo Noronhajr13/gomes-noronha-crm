@@ -3,14 +3,19 @@ import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-// GET /api/properties/[id] - Detalhes do imóvel
+// GET /api/properties/[id] - Detalhes do imóvel (aceita id ou code)
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const identifier = params.id
+
+    // Verifica se é um CUID (formato: começa com 'c' seguido de ~24 caracteres alfanuméricos)
+    const isCuid = /^c[a-z0-9]{20,}$/i.test(identifier)
+
     const property = await prisma.property.findUnique({
-      where: { id: params.id },
+      where: isCuid ? { id: identifier } : { code: identifier },
       include: {
         user: {
           select: {
