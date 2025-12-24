@@ -111,6 +111,12 @@ export function ImageUpload({
     fileInputRef.current?.click()
   }, [])
 
+  const handleSetPrimary = useCallback((imageUrl: string) => {
+    // Move a imagem selecionada para a primeira posição
+    const newImages = [imageUrl, ...images.filter(img => img !== imageUrl)]
+    onChange(newImages)
+  }, [images, onChange])
+
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     handleFiles(e.target.files)
     // Reset input para permitir selecionar o mesmo arquivo novamente
@@ -212,7 +218,21 @@ export function ImageUpload({
                   alt={`Imagem ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  {index !== 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleSetPrimary(imageUrl)
+                      }}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-full transition-colors"
+                      title="Definir como principal"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    </button>
+                  )}
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
@@ -227,7 +247,10 @@ export function ImageUpload({
                   </button>
                 </div>
                 {index === 0 && (
-                  <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                  <span className="absolute top-2 left-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded font-medium flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
                     Principal
                   </span>
                 )}
