@@ -15,6 +15,7 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline'
 import CRMLayout from '@/components/layout/CRMLayout'
+import { formStyles } from '@/components/ui/form-elements'
 
 interface Lead {
   id: string
@@ -245,7 +246,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                   placeholder="Nome completo"
                 />
               </div>
@@ -258,7 +259,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                   placeholder="email@exemplo.com"
                 />
               </div>
@@ -271,7 +272,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="phone"
                   value={formatPhone(formData.phone)}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/\D/g, '') }))}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                   placeholder="(00) 00000-0000"
                 />
               </div>
@@ -285,7 +286,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formatCPF(formData.cpf)}
                   onChange={(e) => setFormData(prev => ({ ...prev, cpf: e.target.value.replace(/\D/g, '') }))}
                   maxLength={14}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                   placeholder="000.000.000-00"
                 />
               </div>
@@ -308,7 +309,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formData.status}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                 >
                   {statusOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -326,7 +327,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={formData.source}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                 >
                   {sourceOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -370,7 +371,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="interestType"
                   value={formData.interestType}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                 >
                   {interestTypeOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -388,7 +389,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="budget"
                   value={formData.budget ? formatCurrency(formData.budget) : ''}
                   onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value.replace(/\D/g, '') }))}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                   placeholder="R$ 0,00"
                 />
               </div>
@@ -404,7 +405,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   value={neighborhoodInput}
                   onChange={(e) => setNeighborhoodInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNeighborhood())}
-                  className="flex-1 px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                   placeholder="Digite um bairro e pressione Enter"
                 />
                 <button
@@ -445,7 +446,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                className={formStyles.input}
                 placeholder="Mensagem ou observações do cliente..."
               />
             </div>
@@ -466,7 +467,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="propertyId"
                   value={formData.propertyId}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                 >
                   <option value="">Selecione um imóvel...</option>
                   {properties.map(property => (
@@ -484,7 +485,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   name="userId"
                   value={formData.userId}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  className={formStyles.input}
                 >
                   <option value="">Selecione um corretor...</option>
                   {users.map(u => (

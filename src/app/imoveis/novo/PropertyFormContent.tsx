@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import CRMLayout from '@/components/layout/CRMLayout'
@@ -21,6 +21,8 @@ import {
   Trash2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formStyles, getInputClassName, getSelectClassName, getTextareaClassName } from '@/components/ui/form-elements'
+import { ImageUpload } from '@/components/ui/image-upload'
 
 interface PropertyFormContentProps {
   user: {
@@ -88,15 +90,17 @@ const propertyTypes = [
   { value: 'CASA', label: 'Casa' },
   { value: 'APARTAMENTO', label: 'Apartamento' },
   { value: 'COBERTURA', label: 'Cobertura' },
-  { value: 'TERRENO', label: 'Terreno' },
-  { value: 'SALA_COMERCIAL', label: 'Sala Comercial' },
-  { value: 'LOJA', label: 'Loja' },
-  { value: 'GALPAO', label: 'Galpão' },
-  { value: 'SITIO', label: 'Sítio' },
-  { value: 'FAZENDA', label: 'Fazenda' },
   { value: 'KITNET', label: 'Kitnet' },
   { value: 'FLAT', label: 'Flat' },
   { value: 'SOBRADO', label: 'Sobrado' },
+  { value: 'TERRENO', label: 'Terreno' },
+  { value: 'COMERCIAL', label: 'Comercial' },
+  { value: 'SALA_COMERCIAL', label: 'Sala Comercial' },
+  { value: 'LOJA', label: 'Loja' },
+  { value: 'GALPAO', label: 'Galpão' },
+  { value: 'RURAL', label: 'Rural' },
+  { value: 'SITIO', label: 'Sítio' },
+  { value: 'FAZENDA', label: 'Fazenda' },
 ]
 
 const transactionTypes = [
@@ -174,6 +178,11 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Gera um código único para o imóvel (usado para organizar as imagens no storage)
+  const propertyCode = useMemo(() => {
+    return `imovel-${Date.now()}-${Math.random().toString(36).substring(7)}`
+  }, [])
+
   const tabs: { key: TabKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: 'info', label: 'Informações', icon: Info },
     { key: 'valores', label: 'Valores', icon: DollarSign },
@@ -228,7 +237,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
     const newErrors: Record<string, string> = {}
 
     if (!formData.title.trim()) newErrors.title = 'Título é obrigatório'
-    if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = 'Preço é obrigatório'
+    if (!formData.price || parseInt(formData.price) <= 0) newErrors.price = 'Preço é obrigatório'
     if (!formData.area || parseFloat(formData.area) <= 0) newErrors.area = 'Área é obrigatória'
     if (!formData.address.trim()) newErrors.address = 'Endereço é obrigatório'
     if (!formData.neighborhood.trim()) newErrors.neighborhood = 'Bairro é obrigatório'
@@ -257,9 +266,9 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
         type: formData.type,
         transactionType: formData.transactionType,
         status: formData.status,
-        price: parseFloat(formData.price),
-        condominiumFee: formData.condominiumFee ? parseFloat(formData.condominiumFee) : null,
-        iptu: formData.iptu ? parseFloat(formData.iptu) : null,
+        price: parseInt(formData.price) / 100,
+        condominiumFee: formData.condominiumFee ? parseInt(formData.condominiumFee) / 100 : null,
+        iptu: formData.iptu ? parseInt(formData.iptu) / 100 : null,
         area: parseFloat(formData.area),
         bedrooms: parseInt(formData.bedrooms) || 0,
         bathrooms: parseInt(formData.bathrooms) || 0,
@@ -301,15 +310,15 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
   }
 
   const formatCurrency = (value: string): string => {
-    const numbers = value.replace(/\D/g, '')
-    if (!numbers) return ''
-    const amount = parseInt(numbers) / 100
-    return amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+    if (!value) return ''
+    const centavos = parseInt(value.replace(/\D/g, '')) || 0
+    const reais = centavos / 100
+    return reais.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   }
 
   const handleCurrencyChange = (field: keyof FormData, value: string) => {
     const numbers = value.replace(/\D/g, '')
-    handleInputChange(field, numbers ? (parseInt(numbers) / 100).toString() : '')
+    handleInputChange(field, numbers || '')
   }
 
   return (
@@ -457,7 +466,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
                   <input
                     type="text"
-                    value={formData.price ? formatCurrency((parseFloat(formData.price) * 100).toString()) : ''}
+                    value={formData.price ? formatCurrency(formData.price) : ''}
                     onChange={(e) => handleCurrencyChange('price', e.target.value)}
                     placeholder="0,00"
                     className={cn(
@@ -477,7 +486,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
                   <input
                     type="text"
-                    value={formData.condominiumFee ? formatCurrency((parseFloat(formData.condominiumFee) * 100).toString()) : ''}
+                    value={formData.condominiumFee ? formatCurrency(formData.condominiumFee) : ''}
                     onChange={(e) => handleCurrencyChange('condominiumFee', e.target.value)}
                     placeholder="0,00"
                     className="w-full pl-12 pr-4 py-3 bg-crm-bg-primary border border-crm-border rounded-lg text-crm-text-primary placeholder:text-crm-text-muted focus:outline-none focus:border-crm-accent"
@@ -493,7 +502,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
                   <input
                     type="text"
-                    value={formData.iptu ? formatCurrency((parseFloat(formData.iptu) * 100).toString()) : ''}
+                    value={formData.iptu ? formatCurrency(formData.iptu) : ''}
                     onChange={(e) => handleCurrencyChange('iptu', e.target.value)}
                     placeholder="0,00"
                     className="w-full pl-12 pr-4 py-3 bg-crm-bg-primary border border-crm-border rounded-lg text-crm-text-primary placeholder:text-crm-text-muted focus:outline-none focus:border-crm-accent"
@@ -758,38 +767,13 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                 Arraste e solte as imagens ou clique para selecionar. Recomendamos pelo menos 5 fotos.
               </p>
 
-              {/* Upload Area */}
-              <div className="border-2 border-dashed border-crm-border rounded-lg p-8 text-center hover:border-crm-accent transition-colors cursor-pointer">
-                <Upload className="w-12 h-12 text-crm-text-muted mx-auto mb-4" />
-                <p className="text-sm text-crm-text-primary mb-1">
-                  Arraste imagens aqui ou clique para selecionar
-                </p>
-                <p className="text-xs text-crm-text-muted">
-                  PNG, JPG ou WEBP (máx. 5MB cada)
-                </p>
-              </div>
-
-              {/* Image Preview */}
-              {images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative aspect-square bg-crm-bg-elevated rounded-lg overflow-hidden group">
-                      <img src={image} alt="" className="w-full h-full object-cover" />
-                      <button
-                        onClick={() => setImages(images.filter((_, i) => i !== index))}
-                        className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      {index === 0 && (
-                        <span className="absolute bottom-2 left-2 px-2 py-0.5 bg-crm-accent text-white text-xs rounded">
-                          Capa
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+              {/* Upload Component */}
+              <ImageUpload
+                propertyCode={propertyCode}
+                images={images}
+                onChange={setImages}
+                maxImages={20}
+              />
             </div>
 
             <div>

@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     
     // Parâmetros de filtro
     const type = searchParams.get('type')
-    const transactionType = searchParams.get('transactionType')
+    const purpose = searchParams.get('purpose') || searchParams.get('transactionType')
     const city = searchParams.get('city')
     const neighborhood = searchParams.get('neighborhood')
     const minPrice = searchParams.get('minPrice')
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {}
     
     if (type) where.type = type
-    if (transactionType) where.transactionType = transactionType
+    if (purpose) where.purpose = purpose
     if (city) where.city = { contains: city, mode: 'insensitive' }
     if (neighborhood) where.neighborhood = { contains: neighborhood, mode: 'insensitive' }
     if (minPrice || maxPrice) {
@@ -99,21 +99,37 @@ export async function POST(request: NextRequest) {
     // Gerar código único
     const code = `GN${Date.now().toString(36).toUpperCase()}`
 
+    // Mapear campos do formulário para campos do banco
     const property = await prisma.property.create({
       data: {
-        ...data,
+        title: data.title,
+        description: data.description || null,
+        type: data.type,
+        purpose: data.transactionType || data.purpose || 'VENDA',
+        status: data.status || 'DISPONIVEL',
+        price: data.price,
+        area: data.area || null,
+        bedrooms: data.bedrooms || null,
+        bathrooms: data.bathrooms || null,
+        parkingSpots: data.parking || data.parkingSpots || null,
+        suites: data.suites || null,
+        address: data.address,
+        addressNumber: data.addressNumber || null,
+        complement: data.complement || null,
+        neighborhood: data.neighborhood,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode || null,
+        condominiumFee: data.condominiumFee || null,
+        iptu: data.iptu || null,
+        yearBuilt: data.yearBuilt || null,
+        images: data.images || [],
+        videos: data.videos || [],
+        features: data.amenities || data.features || [],
+        featured: data.featured || false,
+        exclusive: data.exclusive || false,
         code,
         userId: session.user.id
-      }
-    })
-
-    // Registrar atividade
-    await prisma.activity.create({
-      data: {
-        type: 'IMOVEL_CADASTRADO',
-        description: `Imóvel ${property.code} cadastrado`,
-        userId: session.user.id,
-        metadata: { propertyId: property.id }
       }
     })
 

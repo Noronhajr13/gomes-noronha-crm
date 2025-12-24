@@ -31,7 +31,7 @@ export default async function TasksPage() {
       }
     },
     orderBy: [
-      { status: 'asc' },
+      { completed: 'asc' },
       { dueDate: 'asc' },
       { priority: 'desc' }
     ]

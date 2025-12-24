@@ -43,13 +43,13 @@ interface Property {
   code: string
   title: string
   type: string
-  transactionType: string
+  purpose: string
   status: string
   price: number
   area: number
   bedrooms: number
   bathrooms: number
-  parking: number
+  parkingSpots: number
   neighborhood: string
   city: string
   images: string[]
@@ -80,10 +80,15 @@ const propertyTypes = [
   { value: 'CASA', label: 'Casa' },
   { value: 'APARTAMENTO', label: 'Apartamento' },
   { value: 'COBERTURA', label: 'Cobertura' },
+  { value: 'KITNET', label: 'Kitnet' },
+  { value: 'FLAT', label: 'Flat' },
+  { value: 'SOBRADO', label: 'Sobrado' },
   { value: 'TERRENO', label: 'Terreno' },
+  { value: 'COMERCIAL', label: 'Comercial' },
   { value: 'SALA_COMERCIAL', label: 'Sala Comercial' },
   { value: 'LOJA', label: 'Loja' },
   { value: 'GALPAO', label: 'Galpão' },
+  { value: 'RURAL', label: 'Rural' },
   { value: 'SITIO', label: 'Sítio' },
   { value: 'FAZENDA', label: 'Fazenda' },
 ]
@@ -489,13 +494,13 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                 <div className="absolute bottom-2 left-2">
                   <span className={cn(
                     "px-2 py-0.5 text-xs font-medium rounded",
-                    property.transactionType === 'VENDA' 
+                    property.purpose === 'VENDA' 
                       ? "bg-blue-500/80 text-white" 
-                      : property.transactionType === 'ALUGUEL'
+                      : property.purpose === 'ALUGUEL'
                       ? "bg-green-500/80 text-white"
                       : "bg-purple-500/80 text-white"
                   )}>
-                    {property.transactionType.replace('_', '/')}
+                    {property.purpose.replace('_', '/')}
                   </span>
                 </div>
 
@@ -549,10 +554,10 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                       {property.bathrooms}
                     </span>
                   )}
-                  {property.parking > 0 && (
+                  {property.parkingSpots > 0 && (
                     <span className="flex items-center gap-1">
                       <Car className="w-3 h-3" />
-                      {property.parking}
+                      {property.parkingSpots}
                     </span>
                   )}
                 </div>
@@ -649,9 +654,9 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                     <span className="text-sm text-crm-text-secondary">{property.type}</span>
                     <span className={cn(
                       "block text-xs mt-0.5",
-                      property.transactionType === 'VENDA' ? "text-blue-400" : "text-green-400"
+                      property.purpose === 'VENDA' ? "text-blue-400" : "text-green-400"
                     )}>
-                      {property.transactionType}
+                      {property.purpose}
                     </span>
                   </td>
                   <td className="p-3">

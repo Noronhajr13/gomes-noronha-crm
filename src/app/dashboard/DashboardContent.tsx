@@ -65,13 +65,12 @@ interface DashboardData {
       title: string
       price: number
       status: string
-      transactionType: string
+      purpose: string
       images: string[]
     }>
     tasks: Array<{
       id: string
       title: string
-      type: string
       dueDate: string
       priority: string
     }>
@@ -290,14 +289,13 @@ export default function DashboardContent({ user }: DashboardContentProps) {
                     <div className={`w-1 h-10 rounded-full ${priorityColors[task.priority] || 'bg-gray-400'}`} />
                     <div>
                       <p className="font-medium text-crm-text-primary">{task.title}</p>
-                      <p className="text-sm text-crm-text-muted">{task.type}</p>
+                      <p className="text-sm text-crm-text-muted">Vence em: {task.dueDate ? new Date(task.dueDate).toLocaleDateString('pt-BR') : '-'}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-crm-text-secondary">
-                      {new Date(task.dueDate).toLocaleDateString('pt-BR')}
-                    </p>
-                    <p className="text-xs text-crm-text-muted">{task.priority}</p>
+                    <span className={`text-xs px-2 py-0.5 rounded ${priorityColors[task.priority]?.replace('bg-', 'bg-opacity-20 text-')}`}>
+                      {task.priority}
+                    </span>
                   </div>
                 </div>
               ))
@@ -341,9 +339,9 @@ export default function DashboardContent({ user }: DashboardContentProps) {
                   <p className="text-sm text-[#DDA76A] font-bold mt-1">{formatCurrency(property.price)}</p>
                   <div className="flex items-center justify-between mt-2">
                     <span className={`text-xs px-2 py-0.5 rounded ${
-                      property.transactionType === 'VENDA' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'
+                      property.purpose === 'VENDA' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'
                     }`}>
-                      {property.transactionType}
+                      {property.purpose}
                     </span>
                     <span className={`text-xs ${
                       property.status === 'DISPONIVEL' ? 'text-green-400' : 'text-crm-text-muted'

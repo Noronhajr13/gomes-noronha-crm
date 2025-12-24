@@ -26,7 +26,7 @@ export async function GET() {
       prisma.property.count({ where: { featured: true } })
     ])
 
-    // Estatísticas de leads
+    // Estatísticas de leads (usando status corretos do enum)
     const [
       totalLeads,
       newLeads,
@@ -47,31 +47,22 @@ export async function GET() {
       overdueTasks,
       completedTasksThisMonth
     ] = await Promise.all([
-      prisma.task.count({ where: { status: 'PENDENTE' } }),
+      prisma.task.count({ where: { completed: false } }),
       prisma.task.count({
         where: {
-          status: 'PENDENTE',
+          completed: false,
           dueDate: { lt: new Date() }
         }
       }),
       prisma.task.count({
         where: {
-          status: 'CONCLUIDA',
+          completed: true,
           updatedAt: {
             gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
           }
         }
       })
     ])
-
-    // Visitas este mês
-    const visitsThisMonth = await prisma.visit.count({
-      where: {
-        scheduledAt: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-        }
-      }
-    })
 
     // Valor total em negociação
     const leadsInNegotiation = await prisma.lead.findMany({
@@ -103,7 +94,7 @@ export async function GET() {
         title: true,
         price: true,
         status: true,
-        transactionType: true,
+        purpose: true,
         images: true
       }
     })
@@ -111,7 +102,7 @@ export async function GET() {
     // Próximas tarefas
     const upcomingTasks = await prisma.task.findMany({
       where: {
-        status: { in: ['PENDENTE', 'EM_ANDAMENTO'] },
+        completed: false,
         dueDate: { gte: new Date() }
       },
       take: 5,
@@ -149,7 +140,7 @@ export async function GET() {
         completedThisMonth: completedTasksThisMonth
       },
       visits: {
-        thisMonth: visitsThisMonth
+        thisMonth: 0
       },
       financial: {
         inNegotiation: totalInNegotiation

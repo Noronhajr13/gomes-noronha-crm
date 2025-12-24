@@ -23,6 +23,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid'
 import CRMLayout from '@/components/layout/CRMLayout'
+import { formStyles, getInputClassName, getSelectClassName } from '@/components/ui/form-elements'
 
 interface Task {
   id: string
@@ -30,12 +31,10 @@ interface Task {
   description: string | null
   dueDate: Date | null
   priority: string
-  status: string
-  type: string
-  relatedLeadId: string | null
-  relatedPropertyId: string | null
+  completed: boolean
+  leadId: string | null
   createdAt: Date
-  completedAt: Date | null
+  updatedAt: Date
   userId: string
   user: {
     id: string
@@ -117,7 +116,6 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [priorityFilter, setPriorityFilter] = useState('')
-  const [typeFilter, setTypeFilter] = useState('')
   const [showNewTaskModal, setShowNewTaskModal] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [saving, setSaving] = useState(false)
@@ -127,7 +125,6 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
     description: '',
     dueDate: '',
     priority: 'MEDIA',
-    type: 'GERAL',
     userId: user.id || '',
   })
 
@@ -141,8 +138,8 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
     return new Date(date).toLocaleString('pt-BR')
   }
 
-  const isOverdue = (dueDate: Date | null, status: string) => {
-    if (!dueDate || status === 'CONCLUIDA' || status === 'CANCELADA') return false
+  const isOverdue = (dueDate: Date | null, completed: boolean) => {
+    if (!dueDate || completed) return false
     return new Date(dueDate) < new Date()
   }
 
@@ -159,19 +156,17 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase()) ||
       task.description?.toLowerCase().includes(search.toLowerCase())
-    const matchesStatus = !statusFilter || task.status === statusFilter
+    const matchesStatus = !statusFilter || (statusFilter === 'CONCLUIDA' ? task.completed : !task.completed)
     const matchesPriority = !priorityFilter || task.priority === priorityFilter
-    const matchesType = !typeFilter || task.type === typeFilter
-    return matchesSearch && matchesStatus && matchesPriority && matchesType
+    return matchesSearch && matchesStatus && matchesPriority
   })
 
   // Estatísticas
   const stats = {
     total: tasks.length,
-    pendentes: tasks.filter(t => t.status === 'PENDENTE').length,
-    emAndamento: tasks.filter(t => t.status === 'EM_ANDAMENTO').length,
-    concluidas: tasks.filter(t => t.status === 'CONCLUIDA').length,
-    atrasadas: tasks.filter(t => isOverdue(t.dueDate, t.status)).length,
+    pendentes: tasks.filter(t => !t.completed).length,
+    concluidas: tasks.filter(t => t.completed).length,
+    atrasadas: tasks.filter(t => isOverdue(t.dueDate, t.completed)).length,
   }
 
   const handleCreateTask = async () => {
@@ -200,7 +195,6 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           description: '',
           dueDate: '',
           priority: 'MEDIA',
-          type: 'GERAL',
           userId: user.id || '',
         })
       } else {
@@ -213,14 +207,13 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
     }
   }
 
-  const handleUpdateStatus = async (taskId: string, newStatus: string) => {
+  const handleToggleComplete = async (taskId: string, currentCompleted: boolean) => {
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          status: newStatus,
-          completedAt: newStatus === 'CONCLUIDA' ? new Date().toISOString() : null
+          completed: !currentCompleted
         }),
       })
 
@@ -300,17 +293,6 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           </div>
           <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <ArrowPathIcon className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-blue-600">{stats.emAndamento}</p>
-                <p className="text-xs text-crm-text-muted">Em Andamento</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 rounded-lg">
                 <CheckCircleIcon className="w-5 h-5 text-green-600" />
               </div>
@@ -354,34 +336,21 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              className={formStyles.input}
             >
               <option value="">Todos os Status</option>
-              {Object.entries(statusLabels).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
+              <option value="PENDENTE">Pendente</option>
+              <option value="CONCLUIDA">Concluída</option>
             </select>
 
             {/* Priority Filter */}
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              className={formStyles.input}
             >
               <option value="">Todas as Prioridades</option>
               {Object.entries(priorityLabels).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
-
-            {/* Type Filter */}
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-            >
-              <option value="">Todos os Tipos</option>
-              {Object.entries(typeLabels).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
               ))}
             </select>
@@ -397,7 +366,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                 Nenhuma tarefa encontrada
               </h3>
               <p className="text-crm-text-muted mb-4">
-                {search || statusFilter || priorityFilter || typeFilter
+                {search || statusFilter || priorityFilter
                   ? 'Tente ajustar os filtros'
                   : 'Crie sua primeira tarefa para começar'}
               </p>
@@ -412,29 +381,26 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           ) : (
             filteredTasks.map((task) => {
               const daysUntil = getDaysUntilDue(task.dueDate)
-              const overdue = isOverdue(task.dueDate, task.status)
+              const overdue = isOverdue(task.dueDate, task.completed)
 
               return (
                 <div
                   key={task.id}
                   className={`bg-crm-bg-surface rounded-xl shadow-sm border p-4 hover:shadow-md transition-shadow ${
-                    task.status === 'CONCLUIDA' ? 'opacity-60' : ''
+                    task.completed ? 'opacity-60' : ''
                   } ${overdue ? 'border-red-200 bg-red-50/30' : 'border-gray-100'}`}
                 >
                   <div className="flex items-start gap-4">
                     {/* Checkbox / Complete Button */}
                     <button
-                      onClick={() => handleUpdateStatus(
-                        task.id,
-                        task.status === 'CONCLUIDA' ? 'PENDENTE' : 'CONCLUIDA'
-                      )}
+                      onClick={() => handleToggleComplete(task.id, task.completed)}
                       className={`mt-1 flex-shrink-0 ${
-                        task.status === 'CONCLUIDA'
+                        task.completed
                           ? 'text-green-500'
                           : 'text-crm-text-disabled hover:text-green-500'
                       }`}
                     >
-                      {task.status === 'CONCLUIDA' ? (
+                      {task.completed ? (
                         <CheckCircleSolid className="w-6 h-6" />
                       ) : (
                         <CheckCircleIcon className="w-6 h-6" />
@@ -446,7 +412,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <h3 className={`font-medium ${
-                            task.status === 'CONCLUIDA' 
+                            task.completed 
                               ? 'text-crm-text-muted line-through' 
                               : 'text-gray-900'
                           }`}>
@@ -472,12 +438,6 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
 
                       {/* Meta Info */}
                       <div className="flex flex-wrap items-center gap-3 mt-3">
-                        {/* Type */}
-                        <div className="flex items-center gap-1 text-sm text-crm-text-muted">
-                          <TaskIcon type={task.type} />
-                          <span>{typeLabels[task.type]}</span>
-                        </div>
-
                         {/* Due Date */}
                         {task.dueDate && (
                           <div className={`flex items-center gap-1 text-sm ${
@@ -514,8 +474,8 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                         </span>
 
                         {/* Status Badge */}
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${statusColors[task.status]}`}>
-                          {statusLabels[task.status]}
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${task.completed ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                          {task.completed ? 'Concluída' : 'Pendente'}
                         </span>
                       </div>
                     </div>
@@ -543,7 +503,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                     type="text"
                     value={newTask.title}
                     onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                    className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    className={formStyles.input}
                     placeholder="Ex: Ligar para cliente"
                   />
                 </div>
@@ -556,7 +516,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                     value={newTask.description}
                     onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                     rows={3}
-                    className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    className={formStyles.input}
                     placeholder="Detalhes da tarefa..."
                   />
                 </div>
@@ -570,7 +530,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                       type="datetime-local"
                       value={newTask.dueDate}
                       onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className={formStyles.input}
                     />
                   </div>
 
@@ -581,7 +541,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                     <select
                       value={newTask.priority}
                       onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className={formStyles.input}
                     >
                       {Object.entries(priorityLabels).map(([value, label]) => (
                         <option key={value} value={value}>{label}</option>
@@ -590,37 +550,20 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-crm-text-secondary mb-1">
-                      Tipo
-                    </label>
-                    <select
-                      value={newTask.type}
-                      onChange={(e) => setNewTask({ ...newTask, type: e.target.value })}
-                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                    >
-                      {Object.entries(typeLabels).map(([value, label]) => (
-                        <option key={value} value={value}>{label}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-crm-text-secondary mb-1">
-                      Responsável
-                    </label>
-                    <select
-                      value={newTask.userId}
-                      onChange={(e) => setNewTask({ ...newTask, userId: e.target.value })}
-                      className="w-full px-4 py-2 border border-crm-border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                    >
-                      <option value="">Selecione...</option>
-                      {users.map(u => (
-                        <option key={u.id} value={u.id}>{u.name || u.email}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-1">
+                    Responsável
+                  </label>
+                  <select
+                    value={newTask.userId}
+                    onChange={(e) => setNewTask({ ...newTask, userId: e.target.value })}
+                    className={formStyles.input}
+                  >
+                    <option value="">Selecione...</option>
+                    {users.map(u => (
+                      <option key={u.id} value={u.id}>{u.name || u.email}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

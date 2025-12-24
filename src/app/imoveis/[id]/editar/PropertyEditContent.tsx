@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { CRMLayout } from '@/components/layout'
 import type { Property } from '@prisma/client'
+import { formStyles, getInputClassName, getSelectClassName, getTextareaClassName } from '@/components/ui/form-elements'
+import { ImageUpload } from '@/components/ui/image-upload'
 
 interface Props {
   property: Property
@@ -33,7 +35,7 @@ export default function PropertyEditContent({ property, user }: Props) {
 
   // Parse initial data
   const initialImages = property.images || []
-  const initialAmenities = property.amenities || []
+  const initialAmenities = property.features || []
 
   const [formData, setFormData] = useState({
     // Info
@@ -41,36 +43,28 @@ export default function PropertyEditContent({ property, user }: Props) {
     description: property.description || '',
     code: property.code || '',
     type: property.type || 'CASA',
-    transactionType: property.transactionType || 'VENDA',
+    transactionType: property.purpose || 'VENDA',
     status: property.status || 'DISPONIVEL',
     
     // Values
     price: (property.price * 100).toString() || '',
-    condominiumFee: property.condominiumFee ? (property.condominiumFee * 100).toString() : '',
-    iptu: property.iptu ? (property.iptu * 100).toString() : '',
     
     // Features
     area: property.area?.toString() || '',
     bedrooms: property.bedrooms?.toString() || '0',
     bathrooms: property.bathrooms?.toString() || '0',
-    suites: property.suites?.toString() || '0',
-    parking: property.parking?.toString() || '0',
-    yearBuilt: property.yearBuilt?.toString() || '',
+    parking: property.parkingSpots?.toString() || '0',
     amenities: initialAmenities,
     
     // Address
     zipCode: property.zipCode || '',
     address: property.address || '',
-    addressNumber: property.addressNumber || '',
-    complement: property.complement || '',
     neighborhood: property.neighborhood || '',
     city: property.city || '',
     state: property.state || '',
     
     // Media
     images: initialImages,
-    videoUrl: property.videos?.[0] || '',
-    virtualTour: property.virtualTour || '',
     
     // Highlights
     featured: property.featured || false,
@@ -190,28 +184,20 @@ export default function PropertyEditContent({ property, user }: Props) {
         description: formData.description || null,
         code: formData.code || property.code,
         type: formData.type,
-        transactionType: formData.transactionType,
+        purpose: formData.transactionType,
         status: formData.status,
         price: parseCurrency(formData.price),
-        condominiumFee: formData.condominiumFee ? parseCurrency(formData.condominiumFee) : null,
-        iptu: formData.iptu ? parseCurrency(formData.iptu) : null,
         area: parseFloat(formData.area) || 0,
         bedrooms: parseInt(formData.bedrooms) || 0,
         bathrooms: parseInt(formData.bathrooms) || 0,
-        suites: parseInt(formData.suites) || 0,
-        parking: parseInt(formData.parking) || 0,
-        yearBuilt: formData.yearBuilt ? parseInt(formData.yearBuilt) : null,
-        amenities: formData.amenities,
+        parkingSpots: parseInt(formData.parking) || 0,
+        features: formData.amenities,
         zipCode: formData.zipCode || null,
         address: formData.address,
-        addressNumber: formData.addressNumber || null,
-        complement: formData.complement || null,
         neighborhood: formData.neighborhood,
         city: formData.city,
         state: formData.state,
         images: formData.images,
-        videos: formData.videoUrl ? [formData.videoUrl] : [],
-        virtualTour: formData.virtualTour || null,
         featured: formData.featured,
         exclusive: formData.exclusive,
       }
@@ -237,10 +223,7 @@ export default function PropertyEditContent({ property, user }: Props) {
     }
   }
 
-  const inputClass = (field: string) => `
-    w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#DDA76A] focus:border-transparent
-    ${errors[field] ? 'border-red-500' : 'border-crm-border'}
-  `
+  const inputClass = (field: string) => getInputClassName(!!errors[field]) // Usando estilos padronizados
 
   return (
     <CRMLayout title="Editar Imóvel" subtitle={property.title} user={user}>
@@ -347,15 +330,17 @@ export default function PropertyEditContent({ property, user }: Props) {
                     <option value="CASA">Casa</option>
                     <option value="APARTAMENTO">Apartamento</option>
                     <option value="COBERTURA">Cobertura</option>
-                    <option value="TERRENO">Terreno</option>
-                    <option value="SALA_COMERCIAL">Sala Comercial</option>
-                    <option value="LOJA">Loja</option>
-                    <option value="GALPAO">Galpão</option>
-                    <option value="SITIO">Sítio</option>
-                    <option value="FAZENDA">Fazenda</option>
                     <option value="KITNET">Kitnet</option>
                     <option value="FLAT">Flat</option>
                     <option value="SOBRADO">Sobrado</option>
+                    <option value="TERRENO">Terreno</option>
+                    <option value="COMERCIAL">Comercial</option>
+                    <option value="SALA_COMERCIAL">Sala Comercial</option>
+                    <option value="LOJA">Loja</option>
+                    <option value="GALPAO">Galpão</option>
+                    <option value="RURAL">Rural</option>
+                    <option value="SITIO">Sítio</option>
+                    <option value="FAZENDA">Fazenda</option>
                   </select>
                 </div>
                 <div>
@@ -399,41 +384,13 @@ export default function PropertyEditContent({ property, user }: Props) {
                 </div>
                 {errors.price && <p className="mt-1 text-sm text-red-500">{errors.price}</p>}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Condomínio</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
-                    <input
-                      type="text"
-                      value={formatCurrency(formData.condominiumFee)}
-                      onChange={(e) => handleInputChange('condominiumFee', e.target.value.replace(/\D/g, ''))}
-                      className={`${inputClass('condominiumFee')} pl-12`}
-                      placeholder="0,00"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">IPTU (anual)</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-crm-text-muted">R$</span>
-                    <input
-                      type="text"
-                      value={formatCurrency(formData.iptu)}
-                      onChange={(e) => handleInputChange('iptu', e.target.value.replace(/\D/g, ''))}
-                      className={`${inputClass('iptu')} pl-12`}
-                      placeholder="0,00"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
           {/* Tab: Características */}
           {activeTab === 'features' && (
             <div className="space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Área (m²) *</label>
                   <input type="number" value={formData.area} onChange={(e) => handleInputChange('area', e.target.value)} className={inputClass('area')} min="0" step="0.01" />
@@ -448,16 +405,8 @@ export default function PropertyEditContent({ property, user }: Props) {
                   <input type="number" value={formData.bathrooms} onChange={(e) => handleInputChange('bathrooms', e.target.value)} className={inputClass('bathrooms')} min="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Suítes</label>
-                  <input type="number" value={formData.suites} onChange={(e) => handleInputChange('suites', e.target.value)} className={inputClass('suites')} min="0" />
-                </div>
-                <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Vagas</label>
                   <input type="number" value={formData.parking} onChange={(e) => handleInputChange('parking', e.target.value)} className={inputClass('parking')} min="0" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Ano</label>
-                  <input type="number" value={formData.yearBuilt} onChange={(e) => handleInputChange('yearBuilt', e.target.value)} className={inputClass('yearBuilt')} min="1900" max={new Date().getFullYear()} />
                 </div>
               </div>
               <div>
@@ -486,19 +435,11 @@ export default function PropertyEditContent({ property, user }: Props) {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-2">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+                <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Endereço *</label>
                   <input type="text" value={formData.address} onChange={(e) => handleInputChange('address', e.target.value)} className={inputClass('address')} placeholder="Rua, Avenida..." />
                   {errors.address && <p className="mt-1 text-sm text-red-500">{errors.address}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Número</label>
-                  <input type="text" value={formData.addressNumber} onChange={(e) => handleInputChange('addressNumber', e.target.value)} className={inputClass('addressNumber')} placeholder="123" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Complemento</label>
-                  <input type="text" value={formData.complement} onChange={(e) => handleInputChange('complement', e.target.value)} className={inputClass('complement')} placeholder="Apto, Bloco..." />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -534,31 +475,17 @@ export default function PropertyEditContent({ property, user }: Props) {
           {activeTab === 'media' && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-crm-text-secondary mb-2">Imagens</label>
-                <div className="border-2 border-dashed border-crm-border rounded-lg p-8 text-center">
-                  <svg className="w-12 h-12 mx-auto text-crm-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <p className="text-crm-text-muted mb-2">Upload de imagens em breve</p>
-                  <p className="text-sm text-crm-text-muted">Arraste e solte ou clique para selecionar</p>
-                </div>
-                {formData.images.length > 0 && (
-                  <div className="mt-4 grid grid-cols-4 gap-4">
-                    {formData.images.map((img, index) => (
-                      <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-crm-bg-hover">
-                        <img src={img} alt={`Imagem ${index + 1}`} className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-crm-text-secondary mb-2">URL do Vídeo</label>
-                <input type="url" value={formData.videoUrl} onChange={(e) => handleInputChange('videoUrl', e.target.value)} className={inputClass('videoUrl')} placeholder="https://youtube.com/watch?v=..." />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-crm-text-secondary mb-2">URL do Tour Virtual</label>
-                <input type="url" value={formData.virtualTour} onChange={(e) => handleInputChange('virtualTour', e.target.value)} className={inputClass('virtualTour')} placeholder="https://matterport.com/..." />
+                <label className="block text-sm font-medium text-crm-text-secondary mb-2">Imagens do Imóvel</label>
+                <p className="text-xs text-crm-text-muted mb-4">
+                  Arraste e solte as imagens ou clique para selecionar. Recomendamos pelo menos 5 fotos.
+                </p>
+                
+                <ImageUpload
+                  propertyCode={property.code || property.id}
+                  images={formData.images}
+                  onChange={(newImages) => handleInputChange('images', newImages)}
+                  maxImages={20}
+                />
               </div>
             </div>
           )}

@@ -61,15 +61,17 @@ export default function PropertyDetailContent({ property, user }: Props) {
       'CASA': 'Casa',
       'APARTAMENTO': 'Apartamento',
       'COBERTURA': 'Cobertura',
-      'TERRENO': 'Terreno',
-      'SALA_COMERCIAL': 'Sala Comercial',
-      'LOJA': 'Loja',
-      'GALPAO': 'Galpão',
-      'SITIO': 'Sítio',
-      'FAZENDA': 'Fazenda',
       'KITNET': 'Kitnet',
       'FLAT': 'Flat',
       'SOBRADO': 'Sobrado',
+      'TERRENO': 'Terreno',
+      'COMERCIAL': 'Comercial',
+      'SALA_COMERCIAL': 'Sala Comercial',
+      'LOJA': 'Loja',
+      'GALPAO': 'Galpão',
+      'RURAL': 'Rural',
+      'SITIO': 'Sítio',
+      'FAZENDA': 'Fazenda',
     }
     return types[type] || type
   }
@@ -106,7 +108,7 @@ export default function PropertyDetailContent({ property, user }: Props) {
   }
 
   const images = property.images || []
-  const amenities = property.amenities || []
+  const amenities = property.features || []
 
   return (
     <CRMLayout title="Detalhes do Imóvel" subtitle={property.title} user={user}>
@@ -214,7 +216,7 @@ export default function PropertyDetailContent({ property, user }: Props) {
                 </div>
                 <div>
                   <p className="text-sm text-crm-text-muted">Transação</p>
-                  <p className="font-medium text-crm-text-primary">{getTransactionLabel(property.transactionType)}</p>
+                  <p className="font-medium text-crm-text-primary">{getTransactionLabel(property.purpose)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-crm-text-muted">Cadastrado em</p>
@@ -255,17 +257,7 @@ export default function PropertyDetailContent({ property, user }: Props) {
                     <p className="font-semibold text-crm-text-primary">{property.bedrooms}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-crm-bg-elevated rounded-lg">
-                  <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#DDA76A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-crm-text-muted">Suítes</p>
-                    <p className="font-semibold text-crm-text-primary">{property.suites}</p>
-                  </div>
-                </div>
+
                 <div className="flex items-center gap-3 p-3 bg-crm-bg-elevated rounded-lg">
                   <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
                     <svg className="w-5 h-5 text-[#DDA76A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,22 +277,9 @@ export default function PropertyDetailContent({ property, user }: Props) {
                   </div>
                   <div>
                     <p className="text-sm text-crm-text-muted">Vagas</p>
-                    <p className="font-semibold text-crm-text-primary">{property.parking}</p>
+                    <p className="font-semibold text-crm-text-primary">{property.parkingSpots}</p>
                   </div>
                 </div>
-                {property.yearBuilt && (
-                  <div className="flex items-center gap-3 p-3 bg-crm-bg-elevated rounded-lg">
-                    <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-[#DDA76A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-crm-text-muted">Ano</p>
-                      <p className="font-semibold text-crm-text-primary">{property.yearBuilt}</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -329,8 +308,6 @@ export default function PropertyDetailContent({ property, user }: Props) {
                   <p className="text-sm text-crm-text-muted">Endereço</p>
                   <p className="font-medium text-crm-text-primary">
                     {property.address}
-                    {property.addressNumber && `, ${property.addressNumber}`}
-                    {property.complement && ` - ${property.complement}`}
                   </p>
                 </div>
                 <div>
@@ -359,22 +336,10 @@ export default function PropertyDetailContent({ property, user }: Props) {
               <div className="space-y-4">
                 <div className="p-4 bg-[#DDA76A]/10 rounded-lg">
                   <p className="text-sm text-crm-text-muted">
-                    {property.transactionType === 'ALUGUEL' ? 'Aluguel' : 'Preço'}
+                    {property.purpose === 'ALUGUEL' ? 'Aluguel' : 'Preço'}
                   </p>
                   <p className="text-2xl font-bold text-[#DDA76A]">{formatCurrency(property.price)}</p>
                 </div>
-                {property.condominiumFee && (
-                  <div>
-                    <p className="text-sm text-crm-text-muted">Condomínio</p>
-                    <p className="font-semibold text-crm-text-primary">{formatCurrency(property.condominiumFee)}</p>
-                  </div>
-                )}
-                {property.iptu && (
-                  <div>
-                    <p className="text-sm text-crm-text-muted">IPTU (anual)</p>
-                    <p className="font-semibold text-crm-text-primary">{formatCurrency(property.iptu)}</p>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -389,25 +354,6 @@ export default function PropertyDetailContent({ property, user }: Props) {
                     className="object-cover"
                   />
                 </div>
-              </div>
-            )}
-
-            {/* Tour Virtual */}
-            {property.virtualTour && (
-              <div className="bg-crm-bg-surface rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold mb-4 text-crm-text-primary">Tour Virtual</h2>
-                <a 
-                  href={property.virtualTour}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-[#DDA76A] hover:underline"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Acessar Tour Virtual
-                </a>
               </div>
             )}
           </div>

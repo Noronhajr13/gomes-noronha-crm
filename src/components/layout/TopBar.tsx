@@ -2,6 +2,7 @@
 
 import { Bell, Search, Menu } from 'lucide-react'
 import { useState } from 'react'
+import { formStyles } from '@/components/ui/form-elements'
 
 interface TopBarProps {
   title: string
@@ -39,7 +40,7 @@ export default function TopBar({ title, subtitle, user, onMenuClick }: TopBarPro
             <input
               type="text"
               placeholder="Buscar..."
-              className="w-64 px-4 py-2 bg-crm-bg-primary border border-crm-border rounded-lg text-sm text-crm-text-primary placeholder:text-crm-text-muted focus:outline-none focus:border-[#DDA76A]"
+              className={`w-64 text-sm ${formStyles.input}`}
               autoFocus
               onBlur={() => setSearchOpen(false)}
             />

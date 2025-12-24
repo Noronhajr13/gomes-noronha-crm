@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -23,129 +24,124 @@ model User {
   leads      Lead[]
   tasks      Task[]
   activities Activity[]
+  documents  Document[]
   @@map("users")
 }
 
 enum Role {
   ADMIN
+  GERENTE
   CORRETOR
-  DESPACHANTE
-  ASSISTENTE
 }
 
 model Property {
-  id              String          @id @default(cuid())
-  code            String          @unique
-  title           String
-  description     String?         @db.Text
-  type            PropertyType
-  transactionType TransactionType
-  status          PropertyStatus  @default(DISPONIVEL)
-  price           Float
-  condominiumFee  Float?
-  iptu            Float?
-  area            Float
-  bedrooms        Int             @default(0)
-  bathrooms       Int             @default(0)
-  suites          Int             @default(0)
-  parking         Int             @default(0)
-  yearBuilt       Int?
-  address         String
-  addressNumber   String?
-  complement      String?
-  neighborhood    String
-  city            String
-  state           String
-  zipCode         String?
-  latitude        Float?
-  longitude       Float?
-  images          String[]
-  videos          String[]
-  virtualTour     String?
-  amenities       String[]
-  featured        Boolean         @default(false)
-  exclusive       Boolean         @default(false)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  publishedAt     DateTime?
-  userId          String
-  user            User            @relation(fields: [userId], references: [id])
-  leads           Lead[]
-  visits          Visit[]
-  @@index([type])
-  @@index([transactionType])
-  @@index([city, neighborhood])
-  @@index([price])
+  id           String   @id @default(cuid())
+  code         String   @unique
+  title        String
+  description  String?
+  type         PropertyType
+  status       PropertyStatus @default(DISPONIVEL)
+  purpose      PropertyPurpose
+  price        Float
+  area         Float?
+  bedrooms     Int?
+  bathrooms    Int?
+  parkingSpots Int?
+  address      String
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String?
+  latitude     Float?
+  longitude    Float?
+  images       String[]
+  features     String[]
+  featured     Boolean  @default(false)
+  exclusive    Boolean  @default(false)
+  condominiumFee Float?
+  iptu         Float?
+  suites       Int?
+  yearBuilt    Int?
+  addressNumber String?
+  complement   String?
+  videos       String[]
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  leads        Lead[]
   @@map("properties")
 }
 
 enum PropertyType {
   CASA
   APARTAMENTO
-  COBERTURA
   TERRENO
+  COMERCIAL
+  RURAL
+  COBERTURA
+  KITNET
+  SOBRADO
   SALA_COMERCIAL
   LOJA
   GALPAO
   SITIO
   FAZENDA
-  KITNET
   FLAT
-  SOBRADO
 }
 
-enum TransactionType {
+enum PropertyStatus {
+  DISPONIVEL
+  VENDIDO
+  ALUGADO
+  RESERVADO
+  INATIVO
+}
+
+enum PropertyPurpose {
   VENDA
   ALUGUEL
   VENDA_ALUGUEL
 }
 
-enum PropertyStatus {
-  DISPONIVEL
-  RESERVADO
-  VENDIDO
-  ALUGADO
-  INATIVO
-}
-
 model Lead {
-  id                       String           @id @default(cuid())
-  name                     String
-  email                    String
-  phone                    String
-  cpf                      String?
-  source                   LeadSource
-  status                   LeadStatus       @default(NOVO)
-  message                  String?          @db.Text
-  budget                   Float?
-  interestType             TransactionType?
-  preferredContact         String?
-  preferredNeighborhoods   String[]
-  score                    Int              @default(0)
-  createdAt                DateTime         @default(now())
-  updatedAt                DateTime         @updatedAt
-  contactedAt              DateTime?
-  convertedAt              DateTime?
-  propertyId               String?
-  property                 Property?        @relation(fields: [propertyId], references: [id])
-  userId                   String?
-  user                     User?            @relation(fields: [userId], references: [id])
-  visits                   Visit[]
-  activities               Activity[]
-  @@index([source])
-  @@index([createdAt])
+  id                    String     @id @default(cuid())
+  name                  String
+  email                 String?
+  phone                 String
+  cpf                   String?
+  message               String?
+  source                LeadSource @default(SITE)
+  status                LeadStatus @default(NOVO)
+  budget                Float?
+  interestType          String?
+  preferredNeighborhoods String[]
+  score                 Int        @default(0)
+  contactedAt           DateTime?
+  propertyId            String?
+  property              Property?  @relation(fields: [propertyId], references: [id])
+  userId                String?
+  user                  User?      @relation(fields: [userId], references: [id])
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  tasks                 Task[]
+  activities            Activity[]
+  visits                Visit[]
   @@map("leads")
 }
 
 enum LeadSource {
   SITE
-  WHATSAPP
+  TELEFONE
   INDICACAO
+  FACEBOOK
+  INSTAGRAM
+  WHATSAPP
+  PORTAIS
   PORTAL_ZAP
   PORTAL_VIVAREAL
   PORTAL_OLX
   REDES_SOCIAIS
-  TELEFONE
   VISITA_ESCRITORIO
   OUTRO
 }
@@ -159,60 +155,24 @@ enum LeadStatus {
   NEGOCIACAO
   FECHADO_GANHO
   FECHADO_PERDIDO
-  INATIVO
-}
-
-model Visit {
-  id          String      @id @default(cuid())
-  scheduledAt DateTime
-  completedAt DateTime?
-  status      VisitStatus @default(AGENDADA)
-  notes       String?     @db.Text
-  feedback    String?     @db.Text
-  rating      Int?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  propertyId  String
-  property    Property    @relation(fields: [propertyId], references: [id])
-  leadId      String
-  lead        Lead        @relation(fields: [leadId], references: [id])
-  @@index([scheduledAt])
-  @@map("visits")
-}
-
-enum VisitStatus {
-  AGENDADA
-  CONFIRMADA
-  REALIZADA
-  CANCELADA
-  REMARCADA
-  NAO_COMPARECEU
 }
 
 model Task {
-  id                String       @id @default(cuid())
-  title             String
-  description       String?      @db.Text
-  dueDate           DateTime?
-  priority          TaskPriority @default(MEDIA)
-  status            TaskStatus   @default(PENDENTE)
-  type              TaskType     @default(GERAL)
-  relatedLeadId     String?
-  relatedPropertyId String?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  completedAt       DateTime?
-  userId            String
-  user              User         @relation(fields: [userId], references: [id])
-  @@index([dueDate])
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  completed   Boolean      @default(false)
+  status      TaskStatus   @default(PENDENTE)
+  type        TaskType     @default(GERAL)
+  priority    TaskPriority @default(MEDIA)
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  leadId      String?
+  lead        Lead?        @relation(fields: [leadId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   @@map("tasks")
-}
-
-enum TaskPriority {
-  BAIXA
-  MEDIA
-  ALTA
-  URGENTE
 }
 
 enum TaskStatus {
@@ -232,43 +192,110 @@ enum TaskType {
   FOLLOW_UP
 }
 
+enum TaskPriority {
+  BAIXA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
 model Activity {
   id          String       @id @default(cuid())
-  type        ActivityType
+  type        String
   description String
   metadata    Json?
-  createdAt   DateTime     @default(now())
   userId      String
   user        User         @relation(fields: [userId], references: [id])
   leadId      String?
   lead        Lead?        @relation(fields: [leadId], references: [id])
-  @@index([createdAt])
+  createdAt   DateTime     @default(now())
   @@map("activities")
 }
 
-enum ActivityType {
-  LEAD_CRIADO
-  LEAD_ATUALIZADO
-  LEAD_STATUS_ALTERADO
-  CONTATO_REALIZADO
-  VISITA_AGENDADA
-  VISITA_REALIZADA
-  PROPOSTA_ENVIADA
-  NEGOCIACAO_INICIADA
-  VENDA_REALIZADA
-  IMOVEL_CADASTRADO
-  IMOVEL_ATUALIZADO
-  TAREFA_CRIADA
-  TAREFA_CONCLUIDA
-  COMENTARIO_ADICIONADO
+model Visit {
+  id          String      @id @default(cuid())
+  scheduledAt DateTime
+  completedAt DateTime?
+  status      VisitStatus @default(AGENDADA)
+  notes       String?
+  feedback    String?
+  leadId      String
+  lead        Lead        @relation(fields: [leadId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  @@map("visits")
 }
 
-model Setting {
-  id          String   @id @default(cuid())
-  key         String   @unique
-  value       Json
+enum VisitStatus {
+  AGENDADA
+  CONFIRMADA
+  REALIZADA
+  CANCELADA
+  REAGENDADA
+}
+
+enum ActivityType {
+  LIGACAO
+  EMAIL
+  VISITA
+  REUNIAO
+  PROPOSTA
+  CONTRATO
+  OUTROS
+}
+
+model Document {
+  id          String         @id @default(cuid())
+  title       String
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  @@map("settings")
+  type        DocumentType
+  category    String?
+  fileUrl     String
+  fileName    String
+  fileSize    Int
+  mimeType    String
+  tags        String[]
+  leadId      String?
+  propertyId  String?
+  userId      String
+  uploadedBy  User           @relation(fields: [userId], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  @@map("documents")
+}
+
+enum DocumentType {
+  CONTRATO
+  PROPOSTA
+  RG
+  CPF
+  COMPROVANTE_RESIDENCIA
+  COMPROVANTE_RENDA
+  ESCRITURA
+  IPTU
+  MATRICULA
+  CERTIDAO
+  LAUDO
+  FOTO
+  OUTROS
+}
+
+model Configuration {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      ConfigType @default(STRING)
+  category  String?
+  label     String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("configurations")
+}
+
+enum ConfigType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
 }
