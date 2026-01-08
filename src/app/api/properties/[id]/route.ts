@@ -24,7 +24,9 @@ export async function GET(
             phone: true,
             email: true
           }
-        }
+        },
+        cityRef: true,
+        neighborhoodRef: true
       }
     })
 

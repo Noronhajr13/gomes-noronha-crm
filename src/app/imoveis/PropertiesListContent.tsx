@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import CRMLayout from '@/components/layout/CRMLayout'
+import { CRMLayout } from '@/components/layout'
 import {
   Plus,
   Search,

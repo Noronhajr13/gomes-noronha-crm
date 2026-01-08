@@ -13,9 +13,30 @@ export async function DELETE(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    // Buscar documento antes de deletar para registrar atividade
+    const document = await prisma.document.findUnique({
+      where: { id: params.id }
+    })
+
     await prisma.document.delete({
       where: { id: params.id },
     })
+
+    // Registrar atividade de exclusão
+    if (document) {
+      await prisma.activity.create({
+        data: {
+          type: 'DOCUMENTO_EXCLUIDO',
+          description: `Documento "${document.title}" excluído`,
+          userId: session.user.id,
+          leadId: document.leadId || undefined,
+          metadata: {
+            documentTitle: document.title,
+            documentType: document.type
+          }
+        }
+      })
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -52,6 +73,20 @@ export async function PATCH(
           },
         },
       },
+    })
+
+    // Registrar atividade de atualização
+    await prisma.activity.create({
+      data: {
+        type: 'DOCUMENTO_ATUALIZADO',
+        description: `Documento "${document.title}" atualizado`,
+        userId: session.user.id,
+        leadId: document.leadId || undefined,
+        metadata: {
+          documentId: document.id,
+          documentTitle: document.title
+        }
+      }
     })
 
     return NextResponse.json(document)

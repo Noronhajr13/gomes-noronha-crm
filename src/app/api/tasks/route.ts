@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 // GET /api/tasks - Listar tarefas
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
@@ -47,10 +47,10 @@ export async function GET(request: Request) {
 }
 
 // POST /api/tasks - Criar tarefa
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
@@ -63,6 +63,17 @@ export async function POST(request: Request) {
       },
       include: {
         user: { select: { id: true, name: true } }
+      }
+    })
+
+    // Registrar atividade de criação
+    await prisma.activity.create({
+      data: {
+        type: 'TAREFA_CRIADA',
+        description: `Tarefa "${task.title}" criada`,
+        userId: session.user.id,
+        leadId: task.leadId || undefined,
+        metadata: { taskId: task.id, taskTitle: task.title }
       }
     })
 

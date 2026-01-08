@@ -4,17 +4,17 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
-  ArrowLeftIcon,
-  UserIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  DocumentTextIcon,
-  CurrencyDollarIcon,
-  HomeIcon,
-  MapPinIcon,
-  StarIcon,
-} from '@heroicons/react/24/outline'
-import CRMLayout from '@/components/layout/CRMLayout'
+  ArrowLeft,
+  User,
+  Phone,
+  Mail,
+  FileText,
+  DollarSign,
+  Home,
+  MapPin,
+  Star,
+} from 'lucide-react'
+import { CRMLayout } from '@/components/layout'
 import { formStyles } from '@/components/ui/form-elements'
 
 interface Lead {
@@ -219,7 +219,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
             href={`/atendimentos/${lead.id}`}
             className="p-2 text-crm-text-muted hover:text-crm-text-secondary hover:bg-crm-bg-hover rounded-lg transition-colors"
           >
-            <ArrowLeftIcon className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Editar Atendimento</h1>
@@ -232,7 +232,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
           {/* Contact Info */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <UserIcon className="w-5 h-5 text-amber-500" />
+              <User className="w-5 h-5 text-amber-500" />
               Informações de Contato
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -296,7 +296,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
           {/* Status and Source */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DocumentTextIcon className="w-5 h-5 text-amber-500" />
+              <FileText className="w-5 h-5 text-amber-500" />
               Status e Origem
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -359,7 +359,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
           {/* Interest Info */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <HomeIcon className="w-5 h-5 text-amber-500" />
+              <Home className="w-5 h-5 text-amber-500" />
               Interesse
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -455,7 +455,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
           {/* Assignment */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <StarIcon className="w-5 h-5 text-amber-500" />
+              <Star className="w-5 h-5 text-amber-500" />
               Atribuição
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

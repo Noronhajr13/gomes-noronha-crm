@@ -58,7 +58,9 @@ export async function GET(request: NextRequest) {
               name: true,
               phone: true
             }
-          }
+          },
+          cityRef: true,
+          neighborhoodRef: true
         }
       }),
       prisma.property.count({ where })
@@ -121,6 +123,8 @@ export async function POST(request: NextRequest) {
         city: data.city,
         state: data.state,
         zipCode: data.zipCode || null,
+        cityId: data.cityId || null,
+        neighborhoodId: data.neighborhoodId || null,
         condominiumFee: data.condominiumFee || null,
         iptu: data.iptu || null,
         yearBuilt: data.yearBuilt || null,

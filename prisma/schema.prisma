@@ -68,6 +68,10 @@ model Property {
   videos       String[]
   userId       String
   user         User     @relation(fields: [userId], references: [id])
+  cityId          String?
+  neighborhoodId  String?
+  cityRef         City?         @relation(fields: [cityId], references: [id])
+  neighborhoodRef Neighborhood? @relation(fields: [neighborhoodId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   leads        Lead[]
@@ -309,6 +313,7 @@ model City {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   neighborhoods Neighborhood[]
+  properties    Property[]
   @@unique([name, state])
   @@map("cities")
 }
@@ -322,6 +327,7 @@ model Neighborhood {
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  properties Property[]
   @@unique([name, cityId])
   @@map("neighborhoods")
 }

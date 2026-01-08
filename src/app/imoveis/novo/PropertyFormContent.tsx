@@ -304,6 +304,9 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
     try {
       setSaving(true)
 
+      // Encontrar o neighborhoodId baseado no nome selecionado
+      const selectedNeighborhood = neighborhoods.find(n => n.name === formData.neighborhood)
+
       const payload = {
         title: formData.title,
         description: formData.description || null,
@@ -327,6 +330,8 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
         city: formData.city,
         state: formData.state,
         zipCode: formData.zipCode || null,
+        cityId: selectedCityId || null,
+        neighborhoodId: selectedNeighborhood?.id || null,
         amenities: formData.amenities,
         featured: formData.featured,
         exclusive: formData.exclusive,

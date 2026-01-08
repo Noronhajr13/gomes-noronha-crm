@@ -262,6 +262,9 @@ export default function PropertyEditContent({ property, user }: Props) {
     setIsSubmitting(true)
 
     try {
+      // Encontrar o neighborhoodId baseado no nome selecionado
+      const selectedNeighborhood = neighborhoods.find(n => n.name === formData.neighborhood)
+
       const payload = {
         title: formData.title,
         description: formData.description || null,
@@ -281,6 +284,8 @@ export default function PropertyEditContent({ property, user }: Props) {
         neighborhood: formData.neighborhood,
         city: formData.city,
         state: formData.state,
+        cityId: selectedCityId || null,
+        neighborhoodId: selectedNeighborhood?.id || null,
         images: formData.images,
         featured: formData.featured,
         exclusive: formData.exclusive,

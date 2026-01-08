@@ -4,26 +4,26 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
-  ArrowLeftIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  CalendarIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  UserIcon,
-  ClockIcon,
-  ChatBubbleLeftRightIcon,
-  EyeIcon,
-  DocumentTextIcon,
-  HomeIcon,
-  PencilSquareIcon,
-  TrashIcon,
-  PlusIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
-} from '@heroicons/react/24/outline'
-import CRMLayout from '@/components/layout/CRMLayout'
+  ArrowLeft,
+  Phone,
+  Mail,
+  Calendar,
+  MapPin,
+  DollarSign,
+  User,
+  Clock,
+  MessageCircle,
+  Eye,
+  FileText,
+  Home,
+  Pencil,
+  Trash2,
+  Plus,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+} from 'lucide-react'
+import { CRMLayout } from '@/components/layout'
 
 interface Lead {
   id: string
@@ -244,9 +244,9 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
   }
 
   const tabs = [
-    { id: 'info', label: 'Informações', icon: DocumentTextIcon },
-    { id: 'activities', label: 'Atividades', icon: ClockIcon },
-    { id: 'visits', label: 'Visitas', icon: EyeIcon },
+    { id: 'info', label: 'Informações', icon: FileText },
+    { id: 'activities', label: 'Atividades', icon: Clock },
+    { id: 'visits', label: 'Visitas', icon: Eye },
   ]
 
   return (
@@ -259,7 +259,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
               href="/atendimentos"
               className="p-2 text-crm-text-muted hover:text-crm-text-secondary hover:bg-crm-bg-hover rounded-lg transition-colors"
             >
-              <ArrowLeftIcon className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5" />
             </Link>
             <div>
               <div className="flex items-center gap-3">
@@ -291,14 +291,14 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
               href={`/atendimentos/${lead.id}/editar`}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 rounded-lg hover:bg-amber-100"
             >
-              <PencilSquareIcon className="w-4 h-4" />
+              <Pencil className="w-4 h-4" />
               Editar
             </Link>
             <button
               onClick={() => setShowDeleteModal(true)}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 rounded-lg hover:bg-red-100"
             >
-              <TrashIcon className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" />
               Excluir
             </button>
           </div>
@@ -312,7 +312,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                 href={`tel:${lead.phone}`}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
               >
-                <PhoneIcon className="w-4 h-4" />
+                <Phone className="w-4 h-4" />
                 Ligar
               </a>
               <a
@@ -321,7 +321,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#20BD5C] text-sm font-medium"
               >
-                <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4" />
                 WhatsApp
               </a>
             </>
@@ -331,7 +331,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
               href={`mailto:${lead.email}`}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
             >
-              <EnvelopeIcon className="w-4 h-4" />
+              <Mail className="w-4 h-4" />
               E-mail
             </a>
           )}
@@ -368,7 +368,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-crm-bg-hover rounded-lg">
-                      <UserIcon className="w-5 h-5 text-crm-text-secondary" />
+                      <User className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
                       <p className="text-xs text-crm-text-muted">Nome</p>
@@ -377,7 +377,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-crm-bg-hover rounded-lg">
-                      <PhoneIcon className="w-5 h-5 text-crm-text-secondary" />
+                      <Phone className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
                       <p className="text-xs text-crm-text-muted">Telefone</p>
@@ -386,7 +386,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-crm-bg-hover rounded-lg">
-                      <EnvelopeIcon className="w-5 h-5 text-crm-text-secondary" />
+                      <Mail className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
                       <p className="text-xs text-crm-text-muted">E-mail</p>
@@ -395,7 +395,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-crm-bg-hover rounded-lg">
-                      <DocumentTextIcon className="w-5 h-5 text-crm-text-secondary" />
+                      <FileText className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
                       <p className="text-xs text-crm-text-muted">CPF</p>
@@ -411,7 +411,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-crm-bg-hover rounded-lg">
-                      <HomeIcon className="w-5 h-5 text-crm-text-secondary" />
+                      <Home className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
                       <p className="text-xs text-crm-text-muted">Tipo de Interesse</p>
@@ -424,7 +424,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-crm-bg-hover rounded-lg">
-                      <CurrencyDollarIcon className="w-5 h-5 text-crm-text-secondary" />
+                      <DollarSign className="w-5 h-5 text-crm-text-secondary" />
                     </div>
                     <div>
                       <p className="text-xs text-crm-text-muted">Orçamento</p>
@@ -541,14 +541,14 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Histórico de Atividades</h3>
               <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100">
-                <PlusIcon className="w-4 h-4" />
+                <Plus className="w-4 h-4" />
                 Nova Atividade
               </button>
             </div>
 
             {lead.activities.length === 0 ? (
               <div className="text-center py-12">
-                <ClockIcon className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
+                <Clock className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
                 <p className="text-crm-text-muted">Nenhuma atividade registrada</p>
               </div>
             ) : (
@@ -558,7 +558,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   {lead.activities.map((activity) => (
                     <div key={activity.id} className="relative flex gap-4">
                       <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center z-10">
-                        <ClockIcon className="w-4 h-4 text-amber-600" />
+                        <Clock className="w-4 h-4 text-amber-600" />
                       </div>
                       <div className="flex-1 bg-crm-bg-elevated rounded-lg p-4">
                         <div className="flex items-center justify-between mb-1">
@@ -584,14 +584,14 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Visitas Agendadas</h3>
               <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100">
-                <PlusIcon className="w-4 h-4" />
+                <Plus className="w-4 h-4" />
                 Agendar Visita
               </button>
             </div>
 
             {lead.visits.length === 0 ? (
               <div className="text-center py-12">
-                <CalendarIcon className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
+                <Calendar className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
                 <p className="text-crm-text-muted">Nenhuma visita agendada</p>
               </div>
             ) : (
@@ -603,7 +603,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                   >
                     <div className="flex items-center gap-4">
                       <div className="p-2 bg-crm-bg-surface rounded-lg shadow-sm">
-                        <CalendarIcon className="w-5 h-5 text-crm-text-secondary" />
+                        <Calendar className="w-5 h-5 text-crm-text-secondary" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">
@@ -637,7 +637,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
           <div className="bg-crm-bg-surface rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">
-                <ExclamationTriangleIcon className="w-6 h-6 text-red-600" />
+                <AlertTriangle className="w-6 h-6 text-red-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Excluir Atendimento</h3>
             </div>
