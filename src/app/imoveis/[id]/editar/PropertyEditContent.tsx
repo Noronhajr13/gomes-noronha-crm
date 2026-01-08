@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { CRMLayout } from '@/components/layout'
@@ -18,20 +18,36 @@ interface Props {
   }
 }
 
-type TabType = 'info' | 'values' | 'features' | 'address' | 'media' | 'highlights'
+interface City {
+  id: string
+  name: string
+  state: string
+}
 
-const amenitiesList = [
-  'Piscina', 'Churrasqueira', 'Salão de Festas', 'Academia', 'Playground',
-  'Quadra Esportiva', 'Segurança 24h', 'Portaria', 'Elevador', 'Ar Condicionado',
-  'Aquecimento Solar', 'Jardim', 'Varanda', 'Lareira', 'Closet', 'Escritório',
-  'Lavanderia', 'Despensa', 'Quarto de Empregada', 'Banheiro de Empregada'
-]
+interface Neighborhood {
+  id: string
+  name: string
+  cityId: string
+}
+
+interface Amenity {
+  id: string
+  name: string
+}
+
+type TabType = 'info' | 'values' | 'features' | 'address' | 'media' | 'highlights'
 
 export default function PropertyEditContent({ property, user }: Props) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabType>('info')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Estados para dados dinâmicos
+  const [cities, setCities] = useState<City[]>([])
+  const [neighborhoods, setNeighborhoods] = useState<Neighborhood[]>([])
+  const [amenitiesList, setAmenitiesList] = useState<Amenity[]>([])
+  const [selectedCityId, setSelectedCityId] = useState<string>('')
 
   // Parse initial data
   const initialImages = property.images || []
@@ -51,6 +67,7 @@ export default function PropertyEditContent({ property, user }: Props) {
     
     // Features
     area: property.area?.toString() || '',
+    landArea: property.landArea?.toString() || '',
     bedrooms: property.bedrooms?.toString() || '0',
     bathrooms: property.bathrooms?.toString() || '0',
     parking: property.parkingSpots?.toString() || '0',
@@ -79,6 +96,72 @@ export default function PropertyEditContent({ property, user }: Props) {
     { id: 'media' as TabType, label: 'Mídia' },
     { id: 'highlights' as TabType, label: 'Destaques' },
   ]
+
+  // Buscar cidades
+  const fetchCities = useCallback(async () => {
+    try {
+      const res = await fetch('/api/cities')
+      const data = await res.json()
+      setCities(data.cities || [])
+      // Encontrar cidade do imóvel
+      const propertyCity = data.cities?.find((c: City) => c.name === property.city && c.state === property.state)
+      if (propertyCity) {
+        setSelectedCityId(propertyCity.id)
+      }
+    } catch (error) {
+      console.error('Erro ao buscar cidades:', error)
+    }
+  }, [property.city, property.state])
+
+  // Buscar bairros por cidade
+  const fetchNeighborhoods = useCallback(async (cityId: string) => {
+    if (!cityId) return
+    try {
+      const res = await fetch(`/api/neighborhoods?cityId=${cityId}`)
+      const data = await res.json()
+      setNeighborhoods(data.neighborhoods || [])
+    } catch (error) {
+      console.error('Erro ao buscar bairros:', error)
+    }
+  }, [])
+
+  // Buscar comodidades
+  const fetchAmenities = useCallback(async () => {
+    try {
+      const res = await fetch('/api/amenities')
+      const data = await res.json()
+      setAmenitiesList(data.amenities || [])
+    } catch (error) {
+      console.error('Erro ao buscar comodidades:', error)
+    }
+  }, [])
+
+  // Carregar dados iniciais
+  useEffect(() => {
+    fetchCities()
+    fetchAmenities()
+  }, [fetchCities, fetchAmenities])
+
+  // Carregar bairros quando cidade mudar
+  useEffect(() => {
+    if (selectedCityId) {
+      fetchNeighborhoods(selectedCityId)
+    }
+  }, [selectedCityId, fetchNeighborhoods])
+
+  // Atualizar cidade/estado no formData quando mudar seleção
+  const handleCityChange = (cityId: string) => {
+    setSelectedCityId(cityId)
+    const city = cities.find(c => c.id === cityId)
+    if (city) {
+      setFormData(prev => ({
+        ...prev,
+        city: city.name,
+        state: city.state,
+        neighborhood: '' // Limpar bairro ao trocar cidade
+      }))
+    }
+  }
 
   const handleInputChange = (field: string, value: string | boolean | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -188,6 +271,7 @@ export default function PropertyEditContent({ property, user }: Props) {
         status: formData.status,
         price: parseCurrency(formData.price),
         area: parseFloat(formData.area) || 0,
+        landArea: formData.landArea ? parseFloat(formData.landArea) : null,
         bedrooms: parseInt(formData.bedrooms) || 0,
         bathrooms: parseInt(formData.bathrooms) || 0,
         parkingSpots: parseInt(formData.parking) || 0,
@@ -397,6 +481,10 @@ export default function PropertyEditContent({ property, user }: Props) {
                   {errors.area && <p className="mt-1 text-sm text-red-500">{errors.area}</p>}
                 </div>
                 <div>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Área Terreno (m²)</label>
+                  <input type="number" value={formData.landArea} onChange={(e) => handleInputChange('landArea', e.target.value)} className={inputClass('landArea')} min="0" step="0.01" />
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Quartos</label>
                   <input type="number" value={formData.bedrooms} onChange={(e) => handleInputChange('bedrooms', e.target.value)} className={inputClass('bedrooms')} min="0" />
                 </div>
@@ -413,9 +501,9 @@ export default function PropertyEditContent({ property, user }: Props) {
                 <label className="block text-sm font-medium text-crm-text-secondary mb-3">Comodidades</label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {amenitiesList.map(amenity => (
-                    <label key={amenity} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${formData.amenities.includes(amenity) ? 'border-[#DDA76A] bg-[#DDA76A]/10' : 'border-crm-border hover:border-crm-border'}`}>
-                      <input type="checkbox" checked={formData.amenities.includes(amenity)} onChange={() => handleAmenityToggle(amenity)} className="rounded text-[#DDA76A] focus:ring-[#DDA76A]" />
-                      <span className="text-sm text-crm-text-secondary">{amenity}</span>
+                    <label key={amenity.id} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${formData.amenities.includes(amenity.name) ? 'border-[#DDA76A] bg-[#DDA76A]/10' : 'border-crm-border hover:border-crm-border'}`}>
+                      <input type="checkbox" checked={formData.amenities.includes(amenity.name)} onChange={() => handleAmenityToggle(amenity.name)} className="rounded text-[#DDA76A] focus:ring-[#DDA76A]" />
+                      <span className="text-sm text-crm-text-secondary">{amenity.name}</span>
                     </label>
                   ))}
                 </div>
@@ -431,7 +519,6 @@ export default function PropertyEditContent({ property, user }: Props) {
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">CEP</label>
                   <div className="flex gap-2">
                     <input type="text" value={formData.zipCode} onChange={(e) => handleInputChange('zipCode', e.target.value.replace(/\D/g, '').slice(0, 8))} className={`${inputClass('zipCode')} flex-1`} placeholder="00000-000" maxLength={9} />
-                    <button type="button" onClick={handleCepSearch} className="px-4 py-2 bg-crm-bg-hover text-crm-text-secondary rounded-lg hover:bg-gray-200 transition-colors">Buscar</button>
                   </div>
                 </div>
               </div>
@@ -444,27 +531,61 @@ export default function PropertyEditContent({ property, user }: Props) {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Cidade *</label>
+                  <select
+                    value={selectedCityId}
+                    onChange={(e) => handleCityChange(e.target.value)}
+                    className={inputClass('city')}
+                  >
+                    <option value="">Selecione a cidade</option>
+                    {cities.map(city => (
+                      <option key={city.id} value={city.id}>
+                        {city.name} - {city.state}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+                  {!selectedCityId && formData.city && (
+                    <p className="mt-1 text-xs text-amber-500">
+                      Cidade atual: {formData.city} - {formData.state} (não cadastrada)
+                    </p>
+                  )}
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Bairro *</label>
-                  <input type="text" value={formData.neighborhood} onChange={(e) => handleInputChange('neighborhood', e.target.value)} className={inputClass('neighborhood')} placeholder="Centro" />
+                  {neighborhoods.length > 0 ? (
+                    <select
+                      value={formData.neighborhood}
+                      onChange={(e) => handleInputChange('neighborhood', e.target.value)}
+                      className={inputClass('neighborhood')}
+                    >
+                      <option value="">Selecione o bairro</option>
+                      {neighborhoods.map(n => (
+                        <option key={n.id} value={n.name}>
+                          {n.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={formData.neighborhood}
+                      onChange={(e) => handleInputChange('neighborhood', e.target.value)}
+                      className={inputClass('neighborhood')}
+                      placeholder="Digite o bairro"
+                    />
+                  )}
                   {errors.neighborhood && <p className="mt-1 text-sm text-red-500">{errors.neighborhood}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Cidade *</label>
-                  <input type="text" value={formData.city} onChange={(e) => handleInputChange('city', e.target.value)} className={inputClass('city')} placeholder="São Paulo" />
-                  {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
-                </div>
-                <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Estado *</label>
-                  <select value={formData.state} onChange={(e) => handleInputChange('state', e.target.value)} className={inputClass('state')}>
-                    <option value="">Selecione</option>
-                    <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option><option value="CE">Ceará</option><option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option><option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option><option value="PA">Pará</option><option value="PB">Paraíba</option><option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option><option value="PI">Piauí</option><option value="RJ">Rio de Janeiro</option><option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option><option value="RO">Rondônia</option><option value="RR">Roraima</option><option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
-                  </select>
+                  <input
+                    type="text"
+                    value={formData.state}
+                    readOnly
+                    className={`${inputClass('state')} bg-crm-bg-elevated cursor-not-allowed`}
+                    placeholder="Selecione a cidade"
+                  />
                   {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
                 </div>
               </div>

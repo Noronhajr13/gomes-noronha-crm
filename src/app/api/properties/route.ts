@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
         status: data.status || 'DISPONIVEL',
         price: data.price,
         area: data.area || null,
+        landArea: data.landArea || null,
         bedrooms: data.bedrooms || null,
         bathrooms: data.bathrooms || null,
         parkingSpots: data.parking || data.parkingSpots || null,

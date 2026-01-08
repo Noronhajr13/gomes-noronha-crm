@@ -44,6 +44,7 @@ model Property {
   purpose      PropertyPurpose
   price        Float
   area         Float?
+  landArea     Float?
   bedrooms     Int?
   bathrooms    Int?
   parkingSpots Int?
@@ -298,4 +299,39 @@ enum ConfigType {
   NUMBER
   BOOLEAN
   JSON
+}
+
+model City {
+  id            String         @id @default(cuid())
+  name          String
+  state         String         @default("MG")
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  neighborhoods Neighborhood[]
+  @@unique([name, state])
+  @@map("cities")
+}
+
+model Neighborhood {
+  id        String   @id @default(cuid())
+  name      String
+  cityId    String
+  city      City     @relation(fields: [cityId], references: [id])
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([name, cityId])
+  @@map("neighborhoods")
+}
+
+model Amenity {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("amenities")
 }
