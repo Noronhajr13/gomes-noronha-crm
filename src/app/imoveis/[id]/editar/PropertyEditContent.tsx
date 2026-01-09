@@ -8,8 +8,13 @@ import type { Property } from '@prisma/client'
 import { formStyles, getInputClassName, getSelectClassName, getTextareaClassName } from '@/components/ui/form-elements'
 import { ImageUpload } from '@/components/ui/image-upload'
 
+interface PropertyWithRelations extends Property {
+  cityRef?: { id: string; name: string; state: string } | null
+  neighborhoodRef?: { id: string; name: string } | null
+}
+
 interface Props {
-  property: Property
+  property: PropertyWithRelations
   user: {
     id?: string
     name?: string | null
@@ -76,9 +81,9 @@ export default function PropertyEditContent({ property, user }: Props) {
     // Address
     zipCode: property.zipCode || '',
     address: property.address || '',
-    neighborhood: property.neighborhood || '',
-    city: property.city || '',
-    state: property.state || '',
+    neighborhood: property.neighborhoodRef?.name || '',
+    city: property.cityRef?.name || '',
+    state: property.cityRef?.state || 'MG',
     
     // Media
     images: initialImages,
@@ -103,15 +108,14 @@ export default function PropertyEditContent({ property, user }: Props) {
       const res = await fetch('/api/cities')
       const data = await res.json()
       setCities(data.cities || [])
-      // Encontrar cidade do imóvel
-      const propertyCity = data.cities?.find((c: City) => c.name === property.city && c.state === property.state)
-      if (propertyCity) {
-        setSelectedCityId(propertyCity.id)
+      // Usar cityId do property se disponível
+      if (property.cityId) {
+        setSelectedCityId(property.cityId)
       }
     } catch (error) {
       console.error('Erro ao buscar cidades:', error)
     }
-  }, [property.city, property.state])
+  }, [property.cityId])
 
   // Buscar bairros por cidade
   const fetchNeighborhoods = useCallback(async (cityId: string) => {
@@ -239,11 +243,8 @@ export default function PropertyEditContent({ property, user }: Props) {
     if (!formData.neighborhood.trim()) {
       newErrors.neighborhood = 'Bairro é obrigatório'
     }
-    if (!formData.city.trim()) {
+    if (!selectedCityId) {
       newErrors.city = 'Cidade é obrigatória'
-    }
-    if (!formData.state.trim()) {
-      newErrors.state = 'Estado é obrigatório'
     }
 
     setErrors(newErrors)
@@ -255,7 +256,7 @@ export default function PropertyEditContent({ property, user }: Props) {
       if (errors.title) setActiveTab('info')
       else if (errors.price) setActiveTab('values')
       else if (errors.area) setActiveTab('features')
-      else if (errors.address || errors.neighborhood || errors.city || errors.state) setActiveTab('address')
+      else if (errors.address || errors.neighborhood || errors.city) setActiveTab('address')
       return
     }
 
@@ -281,9 +282,6 @@ export default function PropertyEditContent({ property, user }: Props) {
         features: formData.amenities,
         zipCode: formData.zipCode || null,
         address: formData.address,
-        neighborhood: formData.neighborhood,
-        city: formData.city,
-        state: formData.state,
         cityId: selectedCityId || null,
         neighborhoodId: selectedNeighborhood?.id || null,
         images: formData.images,
@@ -583,7 +581,7 @@ export default function PropertyEditContent({ property, user }: Props) {
                   {errors.neighborhood && <p className="mt-1 text-sm text-red-500">{errors.neighborhood}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Estado *</label>
+                  <label className="block text-sm font-medium text-crm-text-secondary mb-2">Estado</label>
                   <input
                     type="text"
                     value={formData.state}
@@ -591,7 +589,6 @@ export default function PropertyEditContent({ property, user }: Props) {
                     className={`${inputClass('state')} bg-crm-bg-elevated cursor-not-allowed`}
                     placeholder="Selecione a cidade"
                   />
-                  {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
                 </div>
               </div>
             </div>

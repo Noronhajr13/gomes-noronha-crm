@@ -46,8 +46,8 @@ interface Lead {
     title: string
     type: string
     price: number | null
-    neighborhood: string | null
-    city: string | null
+    neighborhoodRef?: { id: string; name: string } | null
+    cityRef?: { id: string; name: string; state: string } | null
     images: string[]
   } | null
   user: {
@@ -483,7 +483,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                       {lead.property.title}
                     </p>
                     <p className="text-sm text-crm-text-muted mt-1">
-                      {lead.property.neighborhood}, {lead.property.city}
+                      {lead.property.neighborhoodRef?.name || '-'}, {lead.property.cityRef?.name || '-'}
                     </p>
                     <p className="text-lg font-bold text-amber-600 mt-2">
                       {formatCurrency(lead.property.price)}

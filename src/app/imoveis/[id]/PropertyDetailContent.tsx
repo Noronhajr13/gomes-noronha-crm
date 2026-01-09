@@ -7,8 +7,13 @@ import { useRouter } from 'next/navigation'
 import { CRMLayout } from '@/components/layout'
 import type { Property } from '@prisma/client'
 
+interface PropertyWithRelations extends Property {
+  cityRef?: { id: string; name: string; state: string } | null
+  neighborhoodRef?: { id: string; name: string } | null
+}
+
 interface Props {
-  property: Property
+  property: PropertyWithRelations
   user: {
     id?: string
     name?: string | null
@@ -325,11 +330,11 @@ export default function PropertyDetailContent({ property, user }: Props) {
                 </div>
                 <div>
                   <p className="text-sm text-crm-text-muted">Bairro</p>
-                  <p className="font-medium text-crm-text-primary">{property.neighborhood}</p>
+                  <p className="font-medium text-crm-text-primary">{property.neighborhoodRef?.name || '-'}</p>
                 </div>
                 <div>
                   <p className="text-sm text-crm-text-muted">Cidade/Estado</p>
-                  <p className="font-medium text-crm-text-primary">{property.city} - {property.state}</p>
+                  <p className="font-medium text-crm-text-primary">{property.cityRef?.name || '-'} - {property.cityRef?.state || 'MG'}</p>
                 </div>
                 {property.zipCode && (
                   <div>

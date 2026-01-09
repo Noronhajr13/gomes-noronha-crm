@@ -45,7 +45,7 @@ export default async function AttendanceEditPage({ params }: Props) {
       code: true,
       title: true,
       type: true,
-      neighborhood: true,
+      neighborhoodRef: { select: { id: true, name: true } },
     },
     orderBy: { createdAt: 'desc' },
   })

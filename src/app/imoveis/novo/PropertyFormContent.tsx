@@ -285,7 +285,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
     if (!formData.area || parseFloat(formData.area) <= 0) newErrors.area = 'Área é obrigatória'
     if (!formData.address.trim()) newErrors.address = 'Endereço é obrigatório'
     if (!formData.neighborhood.trim()) newErrors.neighborhood = 'Bairro é obrigatório'
-    if (!formData.city.trim()) newErrors.city = 'Cidade é obrigatória'
+    if (!selectedCityId) newErrors.city = 'Cidade é obrigatória'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -326,9 +326,6 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
         address: formData.address,
         addressNumber: formData.addressNumber || null,
         complement: formData.complement || null,
-        neighborhood: formData.neighborhood,
-        city: formData.city,
-        state: formData.state,
         zipCode: formData.zipCode || null,
         cityId: selectedCityId || null,
         neighborhoodId: selectedNeighborhood?.id || null,

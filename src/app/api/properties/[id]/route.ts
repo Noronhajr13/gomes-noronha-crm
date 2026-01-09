@@ -64,9 +64,13 @@ export async function PUT(
 
     const data = await request.json()
 
+    // Remover campos que não existem mais no schema
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { city, neighborhood, ...cleanData } = data
+
     const property = await prisma.property.update({
       where: { id: params.id },
-      data
+      data: cleanData
     })
 
     // Registrar atividade

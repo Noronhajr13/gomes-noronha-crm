@@ -49,9 +49,6 @@ model Property {
   bathrooms    Int?
   parkingSpots Int?
   address      String
-  neighborhood String
-  city         String
-  state        String
   zipCode      String?
   latitude     Float?
   longitude    Float?

@@ -48,7 +48,7 @@ interface Property {
   code: string | null
   title: string
   type: string
-  neighborhood: string | null
+  neighborhoodRef?: { id: string; name: string } | null
 }
 
 interface UserOption {
@@ -472,7 +472,7 @@ export default function AttendanceEditContent({ lead, user, properties, users }:
                   <option value="">Selecione um imóvel...</option>
                   {properties.map(property => (
                     <option key={property.id} value={property.id}>
-                      {property.code ? `${property.code} - ` : ''}{property.title} ({property.neighborhood || 'Sem bairro'})
+                      {property.code ? `${property.code} - ` : ''}{property.title} ({property.neighborhoodRef?.name || 'Sem bairro'})
                     </option>
                   ))}
                 </select>
