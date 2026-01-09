@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import CRMLayout from '@/components/layout/CRMLayout'
+import { CRMLayout } from '@/components/layout'
 import {
   Plus,
   Search,
@@ -50,12 +50,12 @@ interface Property {
   bedrooms: number
   bathrooms: number
   parkingSpots: number
-  neighborhood: string
-  city: string
   images: string[]
   featured: boolean
   exclusive: boolean
   createdAt: string
+  cityRef?: { id: string; name: string; state: string } | null
+  neighborhoodRef?: { id: string; name: string } | null
   user?: {
     id: string
     name: string
@@ -532,7 +532,7 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
 
                 <div className="flex items-center gap-1 text-crm-text-muted mb-3">
                   <MapPin className="w-3 h-3" />
-                  <span className="text-xs truncate">{property.neighborhood}, {property.city}</span>
+                  <span className="text-xs truncate">{property.neighborhoodRef?.name || '-'}, {property.cityRef?.name || '-'}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs text-crm-text-muted mb-3">
@@ -660,8 +660,8 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                     </span>
                   </td>
                   <td className="p-3">
-                    <span className="text-sm text-crm-text-secondary">{property.neighborhood}</span>
-                    <span className="block text-xs text-crm-text-muted">{property.city}</span>
+                    <span className="text-sm text-crm-text-secondary">{property.neighborhoodRef?.name || '-'}</span>
+                    <span className="block text-xs text-crm-text-muted">{property.cityRef?.name || '-'}</span>
                   </td>
                   <td className="p-3">
                     <span className="text-sm font-medium text-crm-accent">{formatCurrency(property.price)}</span>

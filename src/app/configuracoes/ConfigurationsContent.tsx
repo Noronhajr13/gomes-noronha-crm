@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { CRMLayout } from '@/components/layout'
+import Link from 'next/link'
 import {
   Settings,
   Save,
@@ -16,6 +17,10 @@ import {
   Globe,
   Shield,
   Database,
+  MapPin,
+  Building2,
+  Sparkles,
+  ChevronRight,
 } from 'lucide-react'
 
 interface ConfigurationsContentProps {
@@ -164,6 +169,60 @@ export default function ConfigurationsContent({ user }: ConfigurationsContentPro
   return (
     <CRMLayout title="Configurações" user={user}>
       <div className="space-y-6">
+        {/* Seção de Cadastros */}
+        <div className="bg-crm-bg-secondary rounded-lg border border-crm-border p-6">
+          <h2 className="text-lg font-semibold text-crm-text-primary mb-4">Cadastros</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link
+              href="/configuracoes/cidades"
+              className="flex items-center justify-between p-4 bg-crm-bg-primary rounded-lg border border-crm-border hover:border-[#DDA76A] transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-[#DDA76A]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-crm-text-primary">Cidades</h3>
+                  <p className="text-sm text-crm-text-muted">Gerenciar cidades</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-crm-text-muted group-hover:text-[#DDA76A] transition-colors" />
+            </Link>
+
+            <Link
+              href="/configuracoes/bairros"
+              className="flex items-center justify-between p-4 bg-crm-bg-primary rounded-lg border border-crm-border hover:border-[#DDA76A] transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
+                  <Building2 className="w-5 h-5 text-[#DDA76A]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-crm-text-primary">Bairros</h3>
+                  <p className="text-sm text-crm-text-muted">Gerenciar bairros por cidade</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-crm-text-muted group-hover:text-[#DDA76A] transition-colors" />
+            </Link>
+
+            <Link
+              href="/configuracoes/comodidades"
+              className="flex items-center justify-between p-4 bg-crm-bg-primary rounded-lg border border-crm-border hover:border-[#DDA76A] transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-[#DDA76A]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-crm-text-primary">Comodidades</h3>
+                  <p className="text-sm text-crm-text-muted">Gerenciar comodidades</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-crm-text-muted group-hover:text-[#DDA76A] transition-colors" />
+            </Link>
+          </div>
+        </div>
+
         {/* Tabs de Categorias */}
         <div className="bg-crm-bg-secondary rounded-lg border border-crm-border p-2">
           <div className="flex flex-wrap gap-2">

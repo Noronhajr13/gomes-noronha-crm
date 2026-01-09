@@ -21,6 +21,8 @@ Sistema privado para gestão interna de imóveis, leads/atendimentos, tarefas e 
 - **Tailwind CSS** - Estilização
 - **Lucide React** - Ícones
 - **Bcryptjs** - Hash de senhas
+- **@dnd-kit** - Drag & drop (ordenação de imagens)
+- **Recharts** - Gráficos
 
 ---
 
@@ -31,18 +33,26 @@ src/
 ├── app/
 │   ├── api/
 │   │   ├── auth/[...nextauth]/  # Autenticação
+│   │   ├── amenities/           # API comodidades CRUD
+│   │   ├── cities/              # API cidades CRUD
 │   │   ├── configurations/      # API configurações CRUD
 │   │   ├── dashboard/           # API métricas
 │   │   ├── documents/           # API documentos CRUD
 │   │   ├── leads/               # API leads CRUD
+│   │   ├── neighborhoods/       # API bairros CRUD
 │   │   ├── properties/          # API imóveis CRUD
 │   │   ├── reports/             # API relatórios
-│   │   └── tasks/               # API tarefas CRUD
+│   │   ├── seed/                # API seed de dados
+│   │   ├── tasks/               # API tarefas CRUD
+│   │   └── upload/              # API upload de imagens
 │   ├── atendimentos/            # Páginas de leads/atendimentos
 │   │   ├── [id]/                # Detalhes e edição
 │   │   ├── novo/                # Cadastro
 │   │   └── KanbanBoard.tsx      # Visualização Kanban
 │   ├── configuracoes/           # Configurações do sistema
+│   │   ├── cidades/             # Gestão de cidades
+│   │   ├── bairros/             # Gestão de bairros
+│   │   └── comodidades/         # Gestão de comodidades
 │   ├── dashboard/               # Dashboard com métricas
 │   ├── documentos/              # Gestão de documentos
 │   ├── imoveis/                 # Páginas de imóveis
@@ -57,13 +67,16 @@ src/
 │   │   ├── CRMLayout.tsx        # Layout principal
 │   │   ├── Sidebar.tsx          # Menu lateral
 │   │   └── TopBar.tsx           # Barra superior
+│   ├── properties/              # Componentes específicos de imóveis
 │   └── ui/
 │       ├── form-elements.tsx    # Componentes de formulário
 │       └── image-upload.tsx     # Upload de imagens
 ├── lib/
 │   ├── auth.ts                  # Configuração NextAuth
+│   ├── file-upload.ts           # Upload de arquivos
 │   ├── prisma.ts                # Cliente Prisma
-│   └── supabase.ts              # Cliente Supabase
+│   ├── supabase.ts              # Cliente Supabase
+│   └── utils.ts                 # Funções utilitárias
 └── middleware.ts                # Proteção de rotas
 ```
 
@@ -114,6 +127,59 @@ ConfigType: STRING, NUMBER, BOOLEAN, JSON
 - `addressNumber` - Número do endereço (String?)
 - `complement` - Complemento do endereço (String?)
 - `videos` - URLs de vídeos (String[])
+- `cityId` - Referência para City (String?)
+- `neighborhoodId` - Referência para Neighborhood (String?)
+- `cityRef` - Relação com City (objeto)
+- `neighborhoodRef` - Relação com Neighborhood (objeto)
+
+### City (Cidades)
+Modelo para gerenciar cidades disponíveis no sistema.
+
+```prisma
+model City {
+  id            String         @id @default(cuid())
+  name          String
+  state         String         @default("MG")
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  neighborhoods Neighborhood[]
+  properties    Property[]
+  @@unique([name, state])
+}
+```
+
+### Neighborhood (Bairros)
+Modelo para gerenciar bairros vinculados a cidades.
+
+```prisma
+model Neighborhood {
+  id         String     @id @default(cuid())
+  name       String
+  cityId     String
+  city       City       @relation(fields: [cityId], references: [id])
+  active     Boolean    @default(true)
+  order      Int        @default(0)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  properties Property[]
+  @@unique([name, cityId])
+}
+```
+
+### Amenity (Comodidades)
+Modelo para gerenciar comodidades disponíveis para imóveis.
+
+```prisma
+model Amenity {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
 
 ### Campos Importantes (Task)
 - `status` - TaskStatus: PENDENTE, EM_ANDAMENTO, CONCLUIDA, CANCELADA
@@ -205,6 +271,9 @@ git add . && git commit -m "feat: descricao" && git push
 | Relatórios | ✅ | `/relatorios` (geral, vendas, leads, performance) |
 | Documentos | ✅ | `/documentos` (upload, listagem, CRUD) |
 | Configurações | ✅ | `/configuracoes` (sistema, por categoria, CRUD) |
+| Cidades | ✅ | `/configuracoes/cidades`, `/api/cities` |
+| Bairros | ✅ | `/configuracoes/bairros`, `/api/neighborhoods` |
+| Comodidades | ✅ | `/configuracoes/comodidades`, `/api/amenities` |
 
 ---
 
@@ -227,9 +296,12 @@ git add . && git commit -m "feat: descricao" && git push
 
 ### Imóveis
 - Lista com grid/lista views
-- Filtros avançados
+- Filtros avançados (tipo, finalidade, status, preço, quartos)
 - CRUD completo
-- Galeria de imagens com upload (Supabase Storage)
+- Galeria de imagens com upload e drag & drop para reordenação
+- Vinculação com City e Neighborhood (relações)
+- Seleção dinâmica de cidades e bairros
+- Campo de comodidades (Amenities)
 
 ### Relatórios
 - Relatório Geral (métricas de imóveis, leads, tarefas, visitas)
@@ -255,6 +327,26 @@ git add . && git commit -m "feat: descricao" && git push
 - Acesso restrito a usuários ADMIN
 - Interface com tabs para navegação entre categorias
 
+### Cidades
+- Lista de cidades com filtro por estado (27 estados brasileiros)
+- Modal CRUD para criar/editar cidades
+- Toggle ativo/inativo
+- Validação de duplicidade (mesma cidade + estado)
+- Proteção contra exclusão se houver bairros vinculados
+
+### Bairros
+- Seletor de cidade para filtrar bairros
+- Modal CRUD para criar/editar bairros
+- Ordem customizável para ordenação
+- Vinculação obrigatória com cidade
+- Validação de duplicidade por cidade
+
+### Comodidades
+- Lista de comodidades do sistema
+- Modal CRUD para criar/editar
+- Ordem customizável para ordenação
+- Status ativo/inativo
+
 ---
 
 ## Próximos Passos
@@ -266,11 +358,16 @@ git add . && git commit -m "feat: descricao" && git push
 5. [x] Página de Relatórios (`/relatorios`) ✅
 6. [x] Página de Documentos (`/documentos`) ✅
 7. [x] Página de Configurações (`/configuracoes`) ✅
-8. [ ] Integração completa Supabase Storage para documentos
-9. [ ] Gestão de Usuários (`/usuarios`)
-10. [ ] Dashboard com gráficos (Recharts)
-11. [ ] Notificações em tempo real
-12. [ ] Histórico de atividades detalhado
+8. [x] Cadastro dinâmico de Cidades (`/configuracoes/cidades`) ✅
+9. [x] Cadastro dinâmico de Bairros (`/configuracoes/bairros`) ✅
+10. [x] Cadastro dinâmico de Comodidades (`/configuracoes/comodidades`) ✅
+11. [x] Drag & drop para reordenação de imagens ✅
+12. [x] Vinculação Property → City/Neighborhood ✅
+13. [ ] Integração completa Supabase Storage para documentos
+14. [ ] Gestão de Usuários (`/usuarios`)
+15. [ ] Dashboard com gráficos (Recharts)
+16. [ ] Notificações em tempo real
+17. [ ] Histórico de atividades detalhado
 
 ---
 
@@ -410,6 +507,10 @@ Modelo para armazenar configurações do sistema.
 | Endpoint | Métodos | Descrição |
 |----------|---------|-----------|
 | `/api/auth/[...nextauth]` | GET, POST | Autenticação NextAuth |
+| `/api/amenities` | GET, POST | Listar e criar comodidades |
+| `/api/amenities/[id]` | GET, PATCH, DELETE | CRUD de comodidade |
+| `/api/cities` | GET, POST | Listar e criar cidades |
+| `/api/cities/[id]` | GET, PATCH, DELETE | CRUD de cidade |
 | `/api/configurations` | GET, POST | Listar e criar configurações |
 | `/api/configurations/[id]` | PATCH, DELETE | Atualizar e deletar configuração |
 | `/api/dashboard` | GET | Estatísticas do dashboard |
@@ -417,11 +518,15 @@ Modelo para armazenar configurações do sistema.
 | `/api/documents/[id]` | PATCH, DELETE | Atualizar e deletar documento |
 | `/api/leads` | GET, POST | Listar e criar leads |
 | `/api/leads/[id]` | GET, PATCH, DELETE | Obter, atualizar e deletar lead |
-| `/api/properties` | GET, POST | Listar e criar imóveis |
-| `/api/properties/[id]` | GET, PATCH, DELETE | Obter, atualizar e deletar imóvel |
+| `/api/neighborhoods` | GET, POST | Listar e criar bairros (filtro: `cityId`) |
+| `/api/neighborhoods/[id]` | GET, PATCH, DELETE | CRUD de bairro |
+| `/api/properties` | GET, POST | Listar e criar imóveis (filtros: `cityId`, `neighborhoodId`) |
+| `/api/properties/[id]` | GET, PATCH, DELETE | Obter por ID ou `code`, atualizar e deletar imóvel |
 | `/api/reports` | GET | Gerar relatórios (geral, vendas, leads, performance) |
+| `/api/seed` | GET, POST | Verificar e executar seed de dados iniciais |
 | `/api/tasks` | GET, POST | Listar e criar tarefas |
 | `/api/tasks/[id]` | PATCH, DELETE | Atualizar e deletar tarefa |
+| `/api/upload` | POST, DELETE | Upload e deleção de imagens (local) |
 
 **Parâmetros comuns:**
 - `page` - Número da página (padrão: 1)
@@ -433,4 +538,32 @@ Modelo para armazenar configurações do sistema.
 
 ---
 
-*Atualizado em: 17/12/2025*
+## API de Seed
+
+A API `/api/seed` permite popular o banco com dados iniciais para desenvolvimento.
+
+**GET /api/seed** - Verifica status do seed (contagem de cidades, bairros, comodidades)
+
+**POST /api/seed** - Executa o seed com dados padrão:
+- **Cidade:** Juiz de Fora, MG
+- **17 Bairros:** Alto dos Passos, Bom Pastor, Cascatinha, Centro, Costa Carvalho, Dom Bosco, Granbery, Grajaú, Jardim Glória, Manoel Honório, Paineiras, Santa Helena, Santa Luzia, São Mateus, São Pedro, Teixeiras, Vale do Ipê
+- **23 Comodidades:** Piscina, Churrasqueira, Jardim, Playground, Academia, Salão de Festas, Portaria 24h, Elevador, Ar Condicionado, Aquecedor Solar, Varanda/Sacada, Closet, Despensa, Área de Serviço, Quintal, Garagem Coberta, Piso Porcelanato, Armários Embutidos, Cozinha Americana, Interfone, Cerca Elétrica, Câmeras de Segurança
+
+---
+
+## API de Upload Local
+
+Alternativa ao Supabase Storage para upload de imagens localmente.
+
+**POST /api/upload** - Upload de imagem
+- FormData com campos: `file` (arquivo), `propertyCode` (código do imóvel)
+- Armazena em `/public/uploads/properties/[propertyCode]/`
+- Tipos aceitos: JPEG, PNG, WebP
+- Limite: 5MB por arquivo
+
+**DELETE /api/upload?url=...** - Remove imagem
+- Parâmetro `url` com o caminho da imagem
+
+---
+
+*Atualizado em: 08/01/2026*

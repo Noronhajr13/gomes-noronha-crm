@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const leadId = searchParams.get('leadId') || ''
     const propertyId = searchParams.get('propertyId') || ''
 
-    const where: any = {}
+    const where: Record<string, unknown> = {}
 
     if (search) {
       where.OR = [
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
         total,
         page,
         limit,
-        pages: Math.ceil(total / limit),
+        totalPages: Math.ceil(total / limit),
       },
     })
   } catch (error) {
@@ -117,6 +117,22 @@ export async function POST(request: NextRequest) {
           },
         },
       },
+    })
+
+    // Registrar atividade de criação de documento
+    await prisma.activity.create({
+      data: {
+        type: 'DOCUMENTO_CRIADO',
+        description: `Documento "${document.title}" criado`,
+        userId: session.user.id,
+        leadId: document.leadId || undefined,
+        metadata: {
+          documentId: document.id,
+          documentTitle: document.title,
+          documentType: document.type,
+          propertyId: document.propertyId
+        }
+      }
     })
 
     return NextResponse.json(document, { status: 201 })

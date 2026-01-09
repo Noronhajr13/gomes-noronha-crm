@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import CRMLayout from '@/components/layout/CRMLayout'
+import { CRMLayout } from '@/components/layout'
 import {
   ArrowLeft,
   Save,
@@ -42,6 +42,7 @@ interface FormData {
   condominiumFee: string
   iptu: string
   area: string
+  landArea: string
   bedrooms: string
   bathrooms: string
   suites: string
@@ -69,6 +70,7 @@ const initialFormData: FormData = {
   condominiumFee: '',
   iptu: '',
   area: '',
+  landArea: '',
   bedrooms: '0',
   bathrooms: '0',
   suites: '0',
@@ -123,50 +125,22 @@ const brazilianStates = [
   'SP', 'SE', 'TO'
 ]
 
-const amenitiesList = [
-  'Piscina',
-  'Churrasqueira',
-  'Jardim',
-  'Playground',
-  'Academia',
-  'Salão de Festas',
-  'Portaria 24h',
-  'Elevador',
-  'Ar Condicionado',
-  'Aquecedor Solar',
-  'Varanda/Sacada',
-  'Closet',
-  'Despensa',
-  'Área de Serviço',
-  'Quintal',
-  'Garagem Coberta',
-  'Piso Porcelanato',
-  'Armários Embutidos',
-  'Cozinha Americana',
-  'Interfone',
-  'Cerca Elétrica',
-  'Câmeras de Segurança'
-]
+interface City {
+  id: string
+  name: string
+  state: string
+}
 
-const neighborhoods = [
-  'Alto dos Passos',
-  'Bom Pastor',
-  'Cascatinha',
-  'Centro',
-  'Costa Carvalho',
-  'Dom Bosco',
-  'Granbery',
-  'Grajaú',
-  'Jardim Glória',
-  'Manoel Honório',
-  'Paineiras',
-  'Santa Helena',
-  'Santa Luzia',
-  'São Mateus',
-  'São Pedro',
-  'Teixeiras',
-  'Vale do Ipê',
-]
+interface Neighborhood {
+  id: string
+  name: string
+  cityId: string
+}
+
+interface Amenity {
+  id: string
+  name: string
+}
 
 type TabKey = 'info' | 'valores' | 'caracteristicas' | 'endereco' | 'midia' | 'destaques'
 
@@ -177,6 +151,76 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
   const [images, setImages] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Estados para dados dinâmicos
+  const [cities, setCities] = useState<City[]>([])
+  const [neighborhoods, setNeighborhoods] = useState<Neighborhood[]>([])
+  const [amenitiesList, setAmenitiesList] = useState<Amenity[]>([])
+  const [selectedCityId, setSelectedCityId] = useState<string>('')
+
+  // Buscar cidades
+  const fetchCities = useCallback(async () => {
+    try {
+      const res = await fetch('/api/cities')
+      const data = await res.json()
+      setCities(data.cities || [])
+      // Se houver cidade padrão (Juiz de Fora), selecionar
+      const defaultCity = data.cities?.find((c: City) => c.name === 'Juiz de Fora')
+      if (defaultCity) {
+        setSelectedCityId(defaultCity.id)
+      } else if (data.cities?.length > 0) {
+        setSelectedCityId(data.cities[0].id)
+      }
+    } catch (error) {
+      console.error('Erro ao buscar cidades:', error)
+    }
+  }, [])
+
+  // Buscar bairros por cidade
+  const fetchNeighborhoods = useCallback(async (cityId: string) => {
+    if (!cityId) return
+    try {
+      const res = await fetch(`/api/neighborhoods?cityId=${cityId}`)
+      const data = await res.json()
+      setNeighborhoods(data.neighborhoods || [])
+    } catch (error) {
+      console.error('Erro ao buscar bairros:', error)
+    }
+  }, [])
+
+  // Buscar comodidades
+  const fetchAmenities = useCallback(async () => {
+    try {
+      const res = await fetch('/api/amenities')
+      const data = await res.json()
+      setAmenitiesList(data.amenities || [])
+    } catch (error) {
+      console.error('Erro ao buscar comodidades:', error)
+    }
+  }, [])
+
+  // Carregar dados iniciais
+  useEffect(() => {
+    fetchCities()
+    fetchAmenities()
+  }, [fetchCities, fetchAmenities])
+
+  // Carregar bairros quando cidade mudar
+  useEffect(() => {
+    if (selectedCityId) {
+      fetchNeighborhoods(selectedCityId)
+      // Atualizar cidade no formData
+      const city = cities.find(c => c.id === selectedCityId)
+      if (city) {
+        setFormData(prev => ({
+          ...prev,
+          city: city.name,
+          state: city.state,
+          neighborhood: '' // Limpar bairro ao trocar cidade
+        }))
+      }
+    }
+  }, [selectedCityId, cities, fetchNeighborhoods])
 
   // Gera um código único para o imóvel (usado para organizar as imagens no storage)
   const propertyCode = useMemo(() => {
@@ -241,7 +285,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
     if (!formData.area || parseFloat(formData.area) <= 0) newErrors.area = 'Área é obrigatória'
     if (!formData.address.trim()) newErrors.address = 'Endereço é obrigatório'
     if (!formData.neighborhood.trim()) newErrors.neighborhood = 'Bairro é obrigatório'
-    if (!formData.city.trim()) newErrors.city = 'Cidade é obrigatória'
+    if (!selectedCityId) newErrors.city = 'Cidade é obrigatória'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -260,6 +304,9 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
     try {
       setSaving(true)
 
+      // Encontrar o neighborhoodId baseado no nome selecionado
+      const selectedNeighborhood = neighborhoods.find(n => n.name === formData.neighborhood)
+
       const payload = {
         title: formData.title,
         description: formData.description || null,
@@ -270,6 +317,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
         condominiumFee: formData.condominiumFee ? parseInt(formData.condominiumFee) / 100 : null,
         iptu: formData.iptu ? parseInt(formData.iptu) / 100 : null,
         area: parseFloat(formData.area),
+        landArea: formData.landArea ? parseFloat(formData.landArea) : null,
         bedrooms: parseInt(formData.bedrooms) || 0,
         bathrooms: parseInt(formData.bathrooms) || 0,
         suites: parseInt(formData.suites) || 0,
@@ -278,10 +326,9 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
         address: formData.address,
         addressNumber: formData.addressNumber || null,
         complement: formData.complement || null,
-        neighborhood: formData.neighborhood,
-        city: formData.city,
-        state: formData.state,
         zipCode: formData.zipCode || null,
+        cityId: selectedCityId || null,
+        neighborhoodId: selectedNeighborhood?.id || null,
         amenities: formData.amenities,
         featured: formData.featured,
         exclusive: formData.exclusive,
@@ -536,6 +583,19 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
 
               <div>
                 <label className="block text-sm font-medium text-crm-text-primary mb-2">
+                  Área Terreno (m²)
+                </label>
+                <input
+                  type="number"
+                  value={formData.landArea}
+                  onChange={(e) => handleInputChange('landArea', e.target.value)}
+                  placeholder="0"
+                  className="w-full px-4 py-3 bg-crm-bg-primary border border-crm-border rounded-lg text-crm-text-primary placeholder:text-crm-text-muted focus:outline-none focus:border-crm-accent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-crm-text-primary mb-2">
                   Quartos
                 </label>
                 <input
@@ -610,27 +670,27 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {amenitiesList.map((amenity) => (
                   <button
-                    key={amenity}
+                    key={amenity.id}
                     type="button"
-                    onClick={() => toggleAmenity(amenity)}
+                    onClick={() => toggleAmenity(amenity.name)}
                     className={cn(
                       "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left",
-                      formData.amenities.includes(amenity)
+                      formData.amenities.includes(amenity.name)
                         ? "bg-crm-accent text-white"
                         : "bg-crm-bg-primary border border-crm-border text-crm-text-muted hover:border-crm-accent hover:text-crm-text-primary"
                     )}
                   >
                     <div className={cn(
                       "w-4 h-4 rounded border flex items-center justify-center flex-shrink-0",
-                      formData.amenities.includes(amenity)
+                      formData.amenities.includes(amenity.name)
                         ? "bg-crm-bg-surface border-white"
                         : "border-crm-border"
                     )}>
-                      {formData.amenities.includes(amenity) && (
+                      {formData.amenities.includes(amenity.name) && (
                         <Check className="w-3 h-3 text-crm-accent" />
                       )}
                     </div>
-                    {amenity}
+                    {amenity.name}
                   </button>
                 ))}
               </div>
@@ -704,6 +764,26 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
 
               <div>
                 <label className="block text-sm font-medium text-crm-text-primary mb-2">
+                  Cidade *
+                </label>
+                <select
+                  value={selectedCityId}
+                  onChange={(e) => setSelectedCityId(e.target.value)}
+                  className={cn(
+                    "w-full px-4 py-3 bg-crm-bg-primary border rounded-lg text-crm-text-primary focus:outline-none focus:border-crm-accent",
+                    errors.city ? "border-red-500" : "border-crm-border"
+                  )}
+                >
+                  <option value="">Selecione...</option>
+                  {cities.map(city => (
+                    <option key={city.id} value={city.id}>{city.name} - {city.state}</option>
+                  ))}
+                </select>
+                {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-crm-text-primary mb-2">
                   Bairro *
                 </label>
                 <select
@@ -716,26 +796,10 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                 >
                   <option value="">Selecione...</option>
                   {neighborhoods.map(n => (
-                    <option key={n} value={n}>{n}</option>
+                    <option key={n.id} value={n.name}>{n.name}</option>
                   ))}
                 </select>
                 {errors.neighborhood && <p className="text-red-400 text-xs mt-1">{errors.neighborhood}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-crm-text-primary mb-2">
-                  Cidade *
-                </label>
-                <input
-                  type="text"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange('city', e.target.value)}
-                  className={cn(
-                    "w-full px-4 py-3 bg-crm-bg-primary border rounded-lg text-crm-text-primary focus:outline-none focus:border-crm-accent",
-                    errors.city ? "border-red-500" : "border-crm-border"
-                  )}
-                />
-                {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city}</p>}
               </div>
 
               <div>
@@ -746,6 +810,7 @@ export default function PropertyFormContent({ user }: PropertyFormContentProps) 
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
                   className="w-full px-4 py-3 bg-crm-bg-primary border border-crm-border rounded-lg text-crm-text-primary focus:outline-none focus:border-crm-accent"
+                  disabled
                 >
                   {brazilianStates.map(state => (
                     <option key={state} value={state}>{state}</option>

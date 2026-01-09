@@ -11,14 +11,14 @@ export async function GET(request: NextRequest) {
     // Parâmetros de filtro
     const type = searchParams.get('type')
     const purpose = searchParams.get('purpose') || searchParams.get('transactionType')
-    const city = searchParams.get('city')
-    const neighborhood = searchParams.get('neighborhood')
+    const cityId = searchParams.get('cityId')
+    const neighborhoodId = searchParams.get('neighborhoodId')
     const minPrice = searchParams.get('minPrice')
     const maxPrice = searchParams.get('maxPrice')
     const bedrooms = searchParams.get('bedrooms')
     const featured = searchParams.get('featured')
     const status = searchParams.get('status')
-    
+
     // Paginação
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '12')
@@ -26,11 +26,11 @@ export async function GET(request: NextRequest) {
 
     // Construir filtros
     const where: Record<string, unknown> = {}
-    
+
     if (type) where.type = type
     if (purpose) where.purpose = purpose
-    if (city) where.city = { contains: city, mode: 'insensitive' }
-    if (neighborhood) where.neighborhood = { contains: neighborhood, mode: 'insensitive' }
+    if (cityId) where.cityId = cityId
+    if (neighborhoodId) where.neighborhoodId = neighborhoodId
     if (minPrice || maxPrice) {
       where.price = {}
       if (minPrice) (where.price as Record<string, number>).gte = parseFloat(minPrice)
@@ -58,7 +58,9 @@ export async function GET(request: NextRequest) {
               name: true,
               phone: true
             }
-          }
+          },
+          cityRef: true,
+          neighborhoodRef: true
         }
       }),
       prisma.property.count({ where })
@@ -109,6 +111,7 @@ export async function POST(request: NextRequest) {
         status: data.status || 'DISPONIVEL',
         price: data.price,
         area: data.area || null,
+        landArea: data.landArea || null,
         bedrooms: data.bedrooms || null,
         bathrooms: data.bathrooms || null,
         parkingSpots: data.parking || data.parkingSpots || null,
@@ -116,10 +119,9 @@ export async function POST(request: NextRequest) {
         address: data.address,
         addressNumber: data.addressNumber || null,
         complement: data.complement || null,
-        neighborhood: data.neighborhood,
-        city: data.city,
-        state: data.state,
         zipCode: data.zipCode || null,
+        cityId: data.cityId || null,
+        neighborhoodId: data.neighborhoodId || null,
         condominiumFee: data.condominiumFee || null,
         iptu: data.iptu || null,
         yearBuilt: data.yearBuilt || null,

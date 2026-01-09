@@ -4,25 +4,25 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
-  PlusIcon,
-  MagnifyingGlassIcon,
-  CalendarIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  ExclamationTriangleIcon,
-  XCircleIcon,
-  FunnelIcon,
-  PhoneIcon,
-  HomeIcon,
-  DocumentTextIcon,
-  CurrencyDollarIcon,
-  ArrowPathIcon,
-  UserIcon,
-  TrashIcon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/outline'
-import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid'
-import CRMLayout from '@/components/layout/CRMLayout'
+  Plus,
+  Search,
+  Calendar,
+  CheckCircle,
+  CheckCircle2,
+  Clock,
+  AlertTriangle,
+  XCircle,
+  Filter,
+  Phone,
+  Home,
+  FileText,
+  DollarSign,
+  RefreshCw,
+  User,
+  Trash2,
+  Pencil,
+} from 'lucide-react'
+import { CRMLayout } from '@/components/layout'
 import { formStyles, getInputClassName, getSelectClassName } from '@/components/ui/form-elements'
 
 interface Task {
@@ -101,13 +101,13 @@ const typeLabels: Record<string, string> = {
 }
 
 const typeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  GERAL: DocumentTextIcon,
-  LIGACAO: PhoneIcon,
-  VISITA: HomeIcon,
-  DOCUMENTACAO: DocumentTextIcon,
-  CONTRATO: DocumentTextIcon,
-  FINANCEIRO: CurrencyDollarIcon,
-  FOLLOW_UP: ArrowPathIcon,
+  GERAL: FileText,
+  LIGACAO: Phone,
+  VISITA: Home,
+  DOCUMENTACAO: FileText,
+  CONTRATO: FileText,
+  FINANCEIRO: DollarSign,
+  FOLLOW_UP: RefreshCw,
 }
 
 export default function TasksListContent({ tasks: initialTasks, users, user }: Props) {
@@ -243,7 +243,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
   }
 
   const TaskIcon = ({ type }: { type: string }) => {
-    const Icon = typeIcons[type] || DocumentTextIcon
+    const Icon = typeIcons[type] || FileText
     return <Icon className="w-5 h-5" />
   }
 
@@ -262,7 +262,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
             onClick={() => setShowNewTaskModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 font-medium"
           >
-            <PlusIcon className="w-5 h-5" />
+            <Plus className="w-5 h-5" />
             Nova Tarefa
           </button>
         </div>
@@ -272,7 +272,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-crm-bg-hover rounded-lg">
-                <DocumentTextIcon className="w-5 h-5 text-crm-text-secondary" />
+                <FileText className="w-5 h-5 text-crm-text-secondary" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
@@ -283,7 +283,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-amber-100 rounded-lg">
-                <ClockIcon className="w-5 h-5 text-amber-600" />
+                <Clock className="w-5 h-5 text-amber-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-amber-600">{stats.pendentes}</p>
@@ -294,7 +294,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircleIcon className="w-5 h-5 text-green-600" />
+                <CheckCircle className="w-5 h-5 text-green-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-600">{stats.concluidas}</p>
@@ -305,7 +305,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
           <div className="bg-crm-bg-surface rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-red-100 rounded-lg">
-                <ExclamationTriangleIcon className="w-5 h-5 text-red-600" />
+                <AlertTriangle className="w-5 h-5 text-red-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-red-600">{stats.atrasadas}</p>
@@ -321,7 +321,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
             {/* Search */}
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-crm-text-muted" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-crm-text-muted" />
                 <input
                   type="text"
                   placeholder="Buscar tarefas..."
@@ -361,7 +361,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
         <div className="space-y-3">
           {filteredTasks.length === 0 ? (
             <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-              <DocumentTextIcon className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
+              <FileText className="w-12 h-12 text-crm-text-disabled mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 Nenhuma tarefa encontrada
               </h3>
@@ -374,7 +374,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                 onClick={() => setShowNewTaskModal(true)}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600"
               >
-                <PlusIcon className="w-5 h-5" />
+                <Plus className="w-5 h-5" />
                 Nova Tarefa
               </button>
             </div>
@@ -401,9 +401,9 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                       }`}
                     >
                       {task.completed ? (
-                        <CheckCircleSolid className="w-6 h-6" />
+                        <CheckCircle2 className="w-6 h-6 fill-current" />
                       ) : (
-                        <CheckCircleIcon className="w-6 h-6" />
+                        <CheckCircle className="w-6 h-6" />
                       )}
                     </button>
 
@@ -431,7 +431,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                             onClick={() => handleDeleteTask(task.id)}
                             className="p-2 text-crm-text-muted hover:text-red-500 hover:bg-red-50 rounded-lg"
                           >
-                            <TrashIcon className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
@@ -443,7 +443,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
                           <div className={`flex items-center gap-1 text-sm ${
                             overdue ? 'text-red-600 font-medium' : 'text-crm-text-muted'
                           }`}>
-                            <CalendarIcon className="w-4 h-4" />
+                            <Calendar className="w-4 h-4" />
                             <span>
                               {formatDate(task.dueDate)}
                               {daysUntil !== null && (
@@ -464,7 +464,7 @@ export default function TasksListContent({ tasks: initialTasks, users, user }: P
 
                         {/* Assignee */}
                         <div className="flex items-center gap-1 text-sm text-crm-text-muted">
-                          <UserIcon className="w-4 h-4" />
+                          <User className="w-4 h-4" />
                           <span>{task.user?.name || 'Sem responsável'}</span>
                         </div>
 

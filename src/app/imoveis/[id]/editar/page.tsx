@@ -16,7 +16,11 @@ export default async function PropertyEditPage({ params }: Props) {
   }
 
   const property = await prisma.property.findUnique({
-    where: { id: params.id }
+    where: { id: params.id },
+    include: {
+      cityRef: true,
+      neighborhoodRef: true
+    }
   })
 
   if (!property) {

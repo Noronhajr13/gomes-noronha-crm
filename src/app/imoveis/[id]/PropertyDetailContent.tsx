@@ -7,8 +7,13 @@ import { useRouter } from 'next/navigation'
 import { CRMLayout } from '@/components/layout'
 import type { Property } from '@prisma/client'
 
+interface PropertyWithRelations extends Property {
+  cityRef?: { id: string; name: string; state: string } | null
+  neighborhoodRef?: { id: string; name: string } | null
+}
+
 interface Props {
-  property: Property
+  property: PropertyWithRelations
   user: {
     id?: string
     name?: string | null
@@ -246,6 +251,19 @@ export default function PropertyDetailContent({ property, user }: Props) {
                     <p className="font-semibold text-crm-text-primary">{property.area}m²</p>
                   </div>
                 </div>
+                {property.landArea && (
+                  <div className="flex items-center gap-3 p-3 bg-crm-bg-elevated rounded-lg">
+                    <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-[#DDA76A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm text-crm-text-muted">Terreno</p>
+                      <p className="font-semibold text-crm-text-primary">{property.landArea}m²</p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex items-center gap-3 p-3 bg-crm-bg-elevated rounded-lg">
                   <div className="w-10 h-10 bg-[#DDA76A]/10 rounded-lg flex items-center justify-center">
                     <svg className="w-5 h-5 text-[#DDA76A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -312,11 +330,11 @@ export default function PropertyDetailContent({ property, user }: Props) {
                 </div>
                 <div>
                   <p className="text-sm text-crm-text-muted">Bairro</p>
-                  <p className="font-medium text-crm-text-primary">{property.neighborhood}</p>
+                  <p className="font-medium text-crm-text-primary">{property.neighborhoodRef?.name || '-'}</p>
                 </div>
                 <div>
                   <p className="text-sm text-crm-text-muted">Cidade/Estado</p>
-                  <p className="font-medium text-crm-text-primary">{property.city} - {property.state}</p>
+                  <p className="font-medium text-crm-text-primary">{property.cityRef?.name || '-'} - {property.cityRef?.state || 'MG'}</p>
                 </div>
                 {property.zipCode && (
                   <div>

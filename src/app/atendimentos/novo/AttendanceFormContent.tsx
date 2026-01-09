@@ -4,17 +4,17 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
-  ArrowLeftIcon,
-  UserIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  DocumentTextIcon,
-  CurrencyDollarIcon,
-  HomeIcon,
-  MapPinIcon,
-  StarIcon,
-} from '@heroicons/react/24/outline'
-import CRMLayout from '@/components/layout/CRMLayout'
+  ArrowLeft,
+  User,
+  Phone,
+  Mail,
+  FileText,
+  DollarSign,
+  Home,
+  MapPin,
+  Star,
+} from 'lucide-react'
+import { CRMLayout } from '@/components/layout'
 import { formStyles, getInputClassName, getSelectClassName, getTextareaClassName } from '@/components/ui/form-elements'
 
 interface Property {
@@ -22,7 +22,7 @@ interface Property {
   code: string | null
   title: string
   type: string
-  neighborhood: string | null
+  neighborhoodRef?: { id: string; name: string } | null
 }
 
 interface UserOption {
@@ -193,7 +193,7 @@ export default function AttendanceFormContent({ user, properties, users }: Props
             href="/atendimentos"
             className="p-2 text-crm-text-muted hover:text-crm-text-secondary hover:bg-crm-bg-hover rounded-lg transition-colors"
           >
-            <ArrowLeftIcon className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Novo Atendimento</h1>
@@ -206,7 +206,7 @@ export default function AttendanceFormContent({ user, properties, users }: Props
           {/* Contact Info */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <UserIcon className="w-5 h-5 text-amber-500" />
+              <User className="w-5 h-5 text-amber-500" />
               Informações de Contato
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -270,7 +270,7 @@ export default function AttendanceFormContent({ user, properties, users }: Props
           {/* Status and Source */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DocumentTextIcon className="w-5 h-5 text-amber-500" />
+              <FileText className="w-5 h-5 text-amber-500" />
               Status e Origem
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -333,7 +333,7 @@ export default function AttendanceFormContent({ user, properties, users }: Props
           {/* Interest Info */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <HomeIcon className="w-5 h-5 text-amber-500" />
+              <Home className="w-5 h-5 text-amber-500" />
               Interesse
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -429,7 +429,7 @@ export default function AttendanceFormContent({ user, properties, users }: Props
           {/* Assignment */}
           <div className="bg-crm-bg-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <StarIcon className="w-5 h-5 text-amber-500" />
+              <Star className="w-5 h-5 text-amber-500" />
               Atribuição
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -446,7 +446,7 @@ export default function AttendanceFormContent({ user, properties, users }: Props
                   <option value="">Selecione um imóvel...</option>
                   {properties.map(property => (
                     <option key={property.id} value={property.id}>
-                      {property.code ? `${property.code} - ` : ''}{property.title} ({property.neighborhood || 'Sem bairro'})
+                      {property.code ? `${property.code} - ` : ''}{property.title} ({property.neighborhoodRef?.name || 'Sem bairro'})
                     </option>
                   ))}
                 </select>

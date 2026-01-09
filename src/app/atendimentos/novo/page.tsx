@@ -18,7 +18,7 @@ export default async function NewAttendancePage() {
       code: true,
       title: true,
       type: true,
-      neighborhood: true,
+      neighborhoodRef: { select: { id: true, name: true } },
     },
     orderBy: { createdAt: 'desc' },
   })

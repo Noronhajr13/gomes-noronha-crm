@@ -25,8 +25,8 @@ export default async function AttendanceDetailPage({ params }: Props) {
           title: true,
           type: true,
           price: true,
-          neighborhood: true,
-          city: true,
+          neighborhoodRef: { select: { id: true, name: true } },
+          cityRef: { select: { id: true, name: true, state: true } },
           images: true,
         }
       },

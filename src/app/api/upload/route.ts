@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir, unlink } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File
     const propertyCode = formData.get('propertyCode') as string
@@ -43,7 +50,7 @@ export async function POST(request: NextRequest) {
     const url = `/uploads/properties/${propertyCode}/${fileName}`
 
     return NextResponse.json({ url }, { status: 201 })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Erro no upload:', error)
     return NextResponse.json({ error: 'Erro ao fazer upload' }, { status: 500 })
   }
@@ -51,6 +58,11 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
     const { searchParams } = new URL(request.url)
     const imageUrl = searchParams.get('url')
 
@@ -62,7 +74,7 @@ export async function DELETE(request: NextRequest) {
     await unlink(filePath)
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Erro ao deletar:', error)
     return NextResponse.json({ error: 'Erro ao deletar' }, { status: 500 })
   }
