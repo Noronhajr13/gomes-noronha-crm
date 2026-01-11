@@ -16,6 +16,10 @@ export async function GET(request: NextRequest) {
     const minPrice = searchParams.get('minPrice')
     const maxPrice = searchParams.get('maxPrice')
     const bedrooms = searchParams.get('bedrooms')
+    const bathrooms = searchParams.get('bathrooms')
+    const parking = searchParams.get('parking') || searchParams.get('parkingSpots')
+    const minArea = searchParams.get('minArea')
+    const maxArea = searchParams.get('maxArea')
     const featured = searchParams.get('featured')
     const status = searchParams.get('status')
 
@@ -37,6 +41,13 @@ export async function GET(request: NextRequest) {
       if (maxPrice) (where.price as Record<string, number>).lte = parseFloat(maxPrice)
     }
     if (bedrooms) where.bedrooms = { gte: parseInt(bedrooms) }
+    if (bathrooms) where.bathrooms = { gte: parseInt(bathrooms) }
+    if (parking) where.parkingSpots = { gte: parseInt(parking) }
+    if (minArea || maxArea) {
+      where.area = {}
+      if (minArea) (where.area as Record<string, number>).gte = parseFloat(minArea)
+      if (maxArea) (where.area as Record<string, number>).lte = parseFloat(maxArea)
+    }
     if (featured === 'true') where.featured = true
     if (status) where.status = status
     else where.status = 'DISPONIVEL' // Padrão: apenas disponíveis

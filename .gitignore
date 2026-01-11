@@ -1,10 +1,16 @@
 # Dependencies
+docs/
 node_modules/
 .pnp
 .pnp.js
 
+# Claude
+.claude/agents
+
 # Testing
 coverage/
+specs/
+seed.spec.ts
 
 # Next.js
 .next/
