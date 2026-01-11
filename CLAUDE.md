@@ -522,6 +522,8 @@ Modelo para armazenar configurações do sistema.
 | `/api/neighborhoods/[id]` | GET, PATCH, DELETE | CRUD de bairro |
 | `/api/properties` | GET, POST | Listar e criar imóveis (filtros: `cityId`, `neighborhoodId`) |
 | `/api/properties/[id]` | GET, PATCH, DELETE | Obter por ID ou `code`, atualizar e deletar imóvel |
+| `/api/property-purposes` | GET | Listar tipos de negócio (ALUGUEL, VENDA) |
+| `/api/property-types` | GET | Listar tipos de imóvel (CASA, APARTAMENTO, etc.) |
 | `/api/reports` | GET | Gerar relatórios (geral, vendas, leads, performance) |
 | `/api/seed` | GET, POST | Verificar e executar seed de dados iniciais |
 | `/api/tasks` | GET, POST | Listar e criar tarefas |
