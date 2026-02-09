@@ -15,6 +15,7 @@ import {
   Star,
 } from 'lucide-react'
 import { CRMLayout } from '@/components/layout'
+import { useEnum } from '@/hooks/useEnum'
 import { formStyles } from '@/components/ui/form-elements'
 
 interface Lead {
@@ -71,30 +72,6 @@ interface Props {
   users: UserOption[]
 }
 
-const sourceOptions = [
-  { value: 'SITE', label: 'Site' },
-  { value: 'WHATSAPP', label: 'WhatsApp' },
-  { value: 'INDICACAO', label: 'Indicação' },
-  { value: 'PORTAL_ZAP', label: 'Portal Zap' },
-  { value: 'PORTAL_VIVAREAL', label: 'Portal VivaReal' },
-  { value: 'PORTAL_OLX', label: 'Portal OLX' },
-  { value: 'REDES_SOCIAIS', label: 'Redes Sociais' },
-  { value: 'TELEFONE', label: 'Telefone' },
-  { value: 'VISITA_ESCRITORIO', label: 'Visita ao Escritório' },
-  { value: 'OUTRO', label: 'Outro' },
-]
-
-const statusOptions = [
-  { value: 'NOVO', label: 'Novo' },
-  { value: 'CONTATO_REALIZADO', label: 'Contato Realizado' },
-  { value: 'QUALIFICADO', label: 'Qualificado' },
-  { value: 'VISITA_AGENDADA', label: 'Visita Agendada' },
-  { value: 'PROPOSTA_ENVIADA', label: 'Proposta Enviada' },
-  { value: 'NEGOCIACAO', label: 'Negociação' },
-  { value: 'FECHADO_GANHO', label: 'Fechado (Ganho)' },
-  { value: 'FECHADO_PERDIDO', label: 'Fechado (Perdido)' },
-]
-
 const interestTypeOptions = [
   { value: '', label: 'Selecione...' },
   { value: 'COMPRA', label: 'Compra' },
@@ -103,6 +80,8 @@ const interestTypeOptions = [
 
 export default function AttendanceEditContent({ lead, user, properties, users }: Props) {
   const router = useRouter()
+  const { options: sourceOptions } = useEnum('LeadSource')
+  const { options: statusOptions } = useEnum('LeadStatus')
   const [saving, setSaving] = useState(false)
   const [neighborhoodInput, setNeighborhoodInput] = useState('')
 

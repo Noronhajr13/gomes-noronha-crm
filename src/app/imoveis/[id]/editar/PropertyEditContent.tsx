@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { CRMLayout } from '@/components/layout'
 import type { Property } from '@prisma/client'
 import { formStyles, getInputClassName, getSelectClassName, getTextareaClassName } from '@/components/ui/form-elements'
+import { useEnum } from '@/hooks/useEnum'
 import { ImageUpload } from '@/components/ui/image-upload'
 
 interface PropertyWithRelations extends Property {
@@ -44,6 +45,9 @@ type TabType = 'info' | 'values' | 'features' | 'address' | 'media' | 'highlight
 
 export default function PropertyEditContent({ property, user }: Props) {
   const router = useRouter()
+  const { options: propertyTypeOptions } = useEnum('PropertyType')
+  const { options: transactionTypeOptions } = useEnum('PropertyPurpose')
+  const { options: statusOptionsList } = useEnum('PropertyStatus')
   const [activeTab, setActiveTab] = useState<TabType>('info')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -414,38 +418,25 @@ export default function PropertyEditContent({ property, user }: Props) {
                 <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Tipo do Imóvel</label>
                   <select value={formData.type} onChange={(e) => handleInputChange('type', e.target.value)} className={inputClass('type')}>
-                    <option value="CASA">Casa</option>
-                    <option value="APARTAMENTO">Apartamento</option>
-                    <option value="COBERTURA">Cobertura</option>
-                    <option value="KITNET">Kitnet</option>
-                    <option value="FLAT">Flat</option>
-                    <option value="SOBRADO">Sobrado</option>
-                    <option value="TERRENO">Terreno</option>
-                    <option value="COMERCIAL">Comercial</option>
-                    <option value="SALA_COMERCIAL">Sala Comercial</option>
-                    <option value="LOJA">Loja</option>
-                    <option value="GALPAO">Galpão</option>
-                    <option value="RURAL">Rural</option>
-                    <option value="SITIO">Sítio</option>
-                    <option value="FAZENDA">Fazenda</option>
+                    {propertyTypeOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Tipo de Transação</label>
                   <select value={formData.transactionType} onChange={(e) => handleInputChange('transactionType', e.target.value)} className={inputClass('transactionType')}>
-                    <option value="VENDA">Venda</option>
-                    <option value="ALUGUEL">Aluguel</option>
-                    <option value="VENDA_ALUGUEL">Venda ou Aluguel</option>
+                    {transactionTypeOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-crm-text-secondary mb-2">Status</label>
                   <select value={formData.status} onChange={(e) => handleInputChange('status', e.target.value)} className={inputClass('status')}>
-                    <option value="DISPONIVEL">Disponível</option>
-                    <option value="RESERVADO">Reservado</option>
-                    <option value="VENDIDO">Vendido</option>
-                    <option value="ALUGADO">Alugado</option>
-                    <option value="INATIVO">Inativo</option>
+                    {statusOptionsList.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>

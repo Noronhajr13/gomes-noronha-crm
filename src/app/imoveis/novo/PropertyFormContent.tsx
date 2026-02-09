@@ -21,6 +21,7 @@ import {
   Trash2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useEnum } from '@/hooks/useEnum'
 import { formStyles, getInputClassName, getSelectClassName, getTextareaClassName } from '@/components/ui/form-elements'
 import { ImageUpload } from '@/components/ui/image-upload'
 
@@ -88,37 +89,6 @@ const initialFormData: FormData = {
   exclusive: false
 }
 
-const propertyTypes = [
-  { value: 'CASA', label: 'Casa' },
-  { value: 'APARTAMENTO', label: 'Apartamento' },
-  { value: 'COBERTURA', label: 'Cobertura' },
-  { value: 'KITNET', label: 'Kitnet' },
-  { value: 'FLAT', label: 'Flat' },
-  { value: 'SOBRADO', label: 'Sobrado' },
-  { value: 'TERRENO', label: 'Terreno' },
-  { value: 'COMERCIAL', label: 'Comercial' },
-  { value: 'SALA_COMERCIAL', label: 'Sala Comercial' },
-  { value: 'LOJA', label: 'Loja' },
-  { value: 'GALPAO', label: 'Galpão' },
-  { value: 'RURAL', label: 'Rural' },
-  { value: 'SITIO', label: 'Sítio' },
-  { value: 'FAZENDA', label: 'Fazenda' },
-]
-
-const transactionTypes = [
-  { value: 'VENDA', label: 'Venda' },
-  { value: 'ALUGUEL', label: 'Aluguel' },
-  { value: 'VENDA_ALUGUEL', label: 'Venda e Aluguel' },
-]
-
-const statusOptions = [
-  { value: 'DISPONIVEL', label: 'Disponível' },
-  { value: 'RESERVADO', label: 'Reservado' },
-  { value: 'VENDIDO', label: 'Vendido' },
-  { value: 'ALUGADO', label: 'Alugado' },
-  { value: 'INATIVO', label: 'Inativo' },
-]
-
 const brazilianStates = [
   'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
   'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
@@ -146,6 +116,9 @@ type TabKey = 'info' | 'valores' | 'caracteristicas' | 'endereco' | 'midia' | 'd
 
 export default function PropertyFormContent({ user }: PropertyFormContentProps) {
   const router = useRouter()
+  const { options: propertyTypes } = useEnum('PropertyType')
+  const { options: transactionTypes } = useEnum('PropertyPurpose')
+  const { options: statusOptions } = useEnum('PropertyStatus')
   const [activeTab, setActiveTab] = useState<TabKey>('info')
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [images, setImages] = useState<string[]>([])

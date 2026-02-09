@@ -12,6 +12,8 @@ import {
   ArrowRight,
   MoreVertical,
 } from 'lucide-react'
+import { useEnum } from '@/hooks/useEnum'
+import { enumLabelsKanban, enumColorsKanban, getEnumLabel } from '@/lib/enum-labels'
 
 interface Lead {
   id: string
@@ -41,30 +43,6 @@ interface KanbanBoardProps {
   onUpdateStatus: (leadId: string, newStatus: string) => void
 }
 
-const statusColumns = [
-  { id: 'NOVO', label: 'Novos', color: 'bg-blue-500' },
-  { id: 'CONTATO_REALIZADO', label: 'Contato Realizado', color: 'bg-cyan-500' },
-  { id: 'QUALIFICADO', label: 'Qualificados', color: 'bg-purple-500' },
-  { id: 'VISITA_AGENDADA', label: 'Visita Agendada', color: 'bg-amber-500' },
-  { id: 'PROPOSTA_ENVIADA', label: 'Proposta Enviada', color: 'bg-orange-500' },
-  { id: 'NEGOCIACAO', label: 'Em Negociação', color: 'bg-indigo-500' },
-  { id: 'FECHADO_GANHO', label: 'Ganhos', color: 'bg-green-500' },
-  { id: 'FECHADO_PERDIDO', label: 'Perdidos', color: 'bg-red-500' },
-]
-
-const sourceLabels: Record<string, string> = {
-  SITE: 'Site',
-  WHATSAPP: 'WhatsApp',
-  INDICACAO: 'Indicação',
-  PORTAL_ZAP: 'Zap',
-  PORTAL_VIVAREAL: 'VivaReal',
-  PORTAL_OLX: 'OLX',
-  REDES_SOCIAIS: 'Redes Sociais',
-  TELEFONE: 'Telefone',
-  VISITA_ESCRITORIO: 'Escritório',
-  OUTRO: 'Outro',
-}
-
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR', {
     day: '2-digit',
@@ -88,6 +66,14 @@ const getScoreColor = (score: number) => {
 }
 
 export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps) {
+  const { values: leadStatuses } = useEnum('LeadStatus')
+
+  const statusColumns = leadStatuses.map(id => ({
+    id,
+    label: enumLabelsKanban[id] || getEnumLabel('LeadStatus', id),
+    color: enumColorsKanban[id] || 'bg-gray-500',
+  }))
+
   const getLeadsByStatus = (status: string) => {
     return leads.filter(lead => lead.status === status)
   }
@@ -195,7 +181,7 @@ export default function KanbanBoard({ leads, onUpdateStatus }: KanbanBoardProps)
                   <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] px-1.5 py-0.5 bg-crm-bg-hover text-crm-text-secondary rounded">
-                        {sourceLabels[lead.source] || lead.source}
+                        {getEnumLabel('LeadSource', lead.source)}
                       </span>
                     </div>
                     <div className="flex items-center gap-1 text-[10px] text-crm-text-muted">

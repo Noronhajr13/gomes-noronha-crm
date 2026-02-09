@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CRMLayout } from '@/components/layout'
+import { useEnum } from '@/hooks/useEnum'
+import { getEnumColor } from '@/lib/enum-labels'
 import {
   Plus,
   Search,
@@ -75,48 +77,6 @@ interface Filters {
   maxPrice: string
 }
 
-const propertyTypes = [
-  { value: '', label: 'Todos os tipos' },
-  { value: 'CASA', label: 'Casa' },
-  { value: 'APARTAMENTO', label: 'Apartamento' },
-  { value: 'COBERTURA', label: 'Cobertura' },
-  { value: 'KITNET', label: 'Kitnet' },
-  { value: 'FLAT', label: 'Flat' },
-  { value: 'SOBRADO', label: 'Sobrado' },
-  { value: 'TERRENO', label: 'Terreno' },
-  { value: 'COMERCIAL', label: 'Comercial' },
-  { value: 'SALA_COMERCIAL', label: 'Sala Comercial' },
-  { value: 'LOJA', label: 'Loja' },
-  { value: 'GALPAO', label: 'Galpão' },
-  { value: 'RURAL', label: 'Rural' },
-  { value: 'SITIO', label: 'Sítio' },
-  { value: 'FAZENDA', label: 'Fazenda' },
-]
-
-const transactionTypes = [
-  { value: '', label: 'Todos' },
-  { value: 'VENDA', label: 'Venda' },
-  { value: 'ALUGUEL', label: 'Aluguel' },
-  { value: 'VENDA_ALUGUEL', label: 'Venda/Aluguel' },
-]
-
-const statusOptions = [
-  { value: '', label: 'Todos os status' },
-  { value: 'DISPONIVEL', label: 'Disponível' },
-  { value: 'RESERVADO', label: 'Reservado' },
-  { value: 'VENDIDO', label: 'Vendido' },
-  { value: 'ALUGADO', label: 'Alugado' },
-  { value: 'INATIVO', label: 'Inativo' },
-]
-
-const statusColors: Record<string, string> = {
-  DISPONIVEL: 'bg-green-500/20 text-green-400',
-  RESERVADO: 'bg-yellow-500/20 text-yellow-400',
-  VENDIDO: 'bg-blue-500/20 text-blue-400',
-  ALUGADO: 'bg-purple-500/20 text-purple-400',
-  INATIVO: 'bg-crm-bg-elevated0/20 text-crm-text-muted',
-}
-
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -126,6 +86,9 @@ function formatCurrency(value: number): string {
 }
 
 export default function PropertiesListContent({ user }: PropertiesListContentProps) {
+  const { options: propertyTypes } = useEnum('PropertyType', { addAllOption: true, allOptionLabel: 'Todos os tipos' })
+  const { options: transactionTypes } = useEnum('PropertyPurpose', { addAllOption: true, allOptionLabel: 'Todos' })
+  const { options: statusOptions, getLabel: getStatusLabel } = useEnum('PropertyStatus', { addAllOption: true, allOptionLabel: 'Todos os status' })
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
@@ -524,9 +487,9 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                   </div>
                   <span className={cn(
                     "px-2 py-0.5 text-xs rounded whitespace-nowrap",
-                    statusColors[property.status] || 'bg-crm-bg-elevated0/20 text-crm-text-muted'
+                    getEnumColor('PropertyStatus', property.status, 'dark')
                   )}>
-                    {property.status}
+                    {getStatusLabel(property.status)}
                   </span>
                 </div>
 
@@ -669,9 +632,9 @@ export default function PropertiesListContent({ user }: PropertiesListContentPro
                   <td className="p-3">
                     <span className={cn(
                       "px-2 py-0.5 text-xs rounded",
-                      statusColors[property.status] || 'bg-crm-bg-elevated0/20 text-crm-text-muted'
+                      getEnumColor('PropertyStatus', property.status, 'dark')
                     )}>
-                      {property.status}
+                      {getStatusLabel(property.status)}
                     </span>
                   </td>
                   <td className="p-3">

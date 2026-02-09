@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { CRMLayout } from '@/components/layout'
+import { getEnumLabel, getEnumColor } from '@/lib/enum-labels'
 import type { Property } from '@prisma/client'
 
 interface PropertyWithRelations extends Property {
@@ -39,56 +40,10 @@ export default function PropertyDetailContent({ property, user }: Props) {
     return new Date(date).toLocaleDateString('pt-BR')
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'DISPONIVEL': return 'bg-green-100 text-green-800'
-      case 'VENDIDO': return 'bg-blue-100 text-blue-800'
-      case 'ALUGADO': return 'bg-purple-100 text-purple-800'
-      case 'RESERVADO': return 'bg-yellow-100 text-yellow-800'
-      case 'INATIVO': return 'bg-crm-bg-hover text-crm-text-primary'
-      default: return 'bg-crm-bg-hover text-crm-text-primary'
-    }
-  }
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'DISPONIVEL': return 'Disponível'
-      case 'VENDIDO': return 'Vendido'
-      case 'ALUGADO': return 'Alugado'
-      case 'RESERVADO': return 'Reservado'
-      case 'INATIVO': return 'Inativo'
-      default: return status
-    }
-  }
-
-  const getTypeLabel = (type: string) => {
-    const types: Record<string, string> = {
-      'CASA': 'Casa',
-      'APARTAMENTO': 'Apartamento',
-      'COBERTURA': 'Cobertura',
-      'KITNET': 'Kitnet',
-      'FLAT': 'Flat',
-      'SOBRADO': 'Sobrado',
-      'TERRENO': 'Terreno',
-      'COMERCIAL': 'Comercial',
-      'SALA_COMERCIAL': 'Sala Comercial',
-      'LOJA': 'Loja',
-      'GALPAO': 'Galpão',
-      'RURAL': 'Rural',
-      'SITIO': 'Sítio',
-      'FAZENDA': 'Fazenda',
-    }
-    return types[type] || type
-  }
-
-  const getTransactionLabel = (transaction: string) => {
-    switch (transaction) {
-      case 'VENDA': return 'Venda'
-      case 'ALUGUEL': return 'Aluguel'
-      case 'VENDA_ALUGUEL': return 'Venda ou Aluguel'
-      default: return transaction
-    }
-  }
+  const getStatusColor = (status: string) => getEnumColor('PropertyStatus', status)
+  const getStatusLabel = (status: string) => getEnumLabel('PropertyStatus', status)
+  const getTypeLabel = (type: string) => getEnumLabel('PropertyType', type)
+  const getTransactionLabel = (transaction: string) => getEnumLabel('PropertyPurpose', transaction)
 
   const handleDelete = async () => {
     setIsDeleting(true)

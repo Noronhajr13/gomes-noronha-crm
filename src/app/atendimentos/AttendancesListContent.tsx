@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import KanbanBoard from './KanbanBoard'
 import Link from 'next/link'
 import { CRMLayout } from '@/components/layout'
+import { useEnum } from '@/hooks/useEnum'
+import { getEnumColor } from '@/lib/enum-labels'
 import {
   Plus,
   Search,
@@ -69,56 +71,6 @@ interface Filters {
   status: string
 }
 
-const sourceOptions = [
-  { value: '', label: 'Todas as origens' },
-  { value: 'SITE', label: 'Site' },
-  { value: 'WHATSAPP', label: 'WhatsApp' },
-  { value: 'INDICACAO', label: 'Indicação' },
-  { value: 'PORTAL_ZAP', label: 'Portal Zap' },
-  { value: 'PORTAL_VIVAREAL', label: 'Viva Real' },
-  { value: 'PORTAL_OLX', label: 'OLX' },
-  { value: 'REDES_SOCIAIS', label: 'Redes Sociais' },
-  { value: 'TELEFONE', label: 'Telefone' },
-  { value: 'VISITA_ESCRITORIO', label: 'Visita Escritório' },
-  { value: 'OUTRO', label: 'Outro' },
-]
-
-const statusOptions = [
-  { value: '', label: 'Todos os status' },
-  { value: 'NOVO', label: 'Novo' },
-  { value: 'CONTATO_REALIZADO', label: 'Contato Realizado' },
-  { value: 'QUALIFICADO', label: 'Qualificado' },
-  { value: 'VISITA_AGENDADA', label: 'Visita Agendada' },
-  { value: 'PROPOSTA_ENVIADA', label: 'Proposta Enviada' },
-  { value: 'NEGOCIACAO', label: 'Em Negociação' },
-  { value: 'FECHADO_GANHO', label: 'Fechado (Ganho)' },
-  { value: 'FECHADO_PERDIDO', label: 'Fechado (Perdido)' },
-]
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'NOVO': return 'bg-blue-100 text-blue-800'
-    case 'CONTATO_REALIZADO': return 'bg-cyan-100 text-cyan-800'
-    case 'QUALIFICADO': return 'bg-purple-100 text-purple-800'
-    case 'VISITA_AGENDADA': return 'bg-amber-100 text-amber-800'
-    case 'PROPOSTA_ENVIADA': return 'bg-orange-100 text-orange-800'
-    case 'NEGOCIACAO': return 'bg-indigo-100 text-indigo-800'
-    case 'FECHADO_GANHO': return 'bg-green-100 text-green-800'
-    case 'FECHADO_PERDIDO': return 'bg-red-100 text-red-800'
-    default: return 'bg-crm-bg-hover text-crm-text-primary'
-  }
-}
-
-const getStatusLabel = (status: string) => {
-  const option = statusOptions.find(o => o.value === status)
-  return option?.label || status
-}
-
-const getSourceLabel = (source: string) => {
-  const option = sourceOptions.find(o => o.value === source)
-  return option?.label || source
-}
-
 const getSourceIcon = (source: string) => {
   switch (source) {
     case 'SITE': return <Building2 size={14} />
@@ -166,6 +118,9 @@ const getTimeAgo = (date: string) => {
 }
 
 export default function AttendancesListContent({ user }: AttendancesListContentProps) {
+  const { options: sourceOptions, getLabel: getSourceLabel } = useEnum('LeadSource', { addAllOption: true, allOptionLabel: 'Todas as origens' })
+  const { options: statusOptions, getLabel: getStatusLabel } = useEnum('LeadStatus', { addAllOption: true, allOptionLabel: 'Todos os status' })
+  const getStatusColor = (status: string) => getEnumColor('LeadStatus', status)
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [showFilters, setShowFilters] = useState(false)

@@ -24,6 +24,7 @@ import {
   AlertTriangle,
 } from 'lucide-react'
 import { CRMLayout } from '@/components/layout'
+import { getEnumLabel, getEnumColor, enumColors } from '@/lib/enum-labels'
 
 interface Lead {
   id: string
@@ -84,71 +85,12 @@ interface Props {
   user: User
 }
 
-const sourceLabels: Record<string, string> = {
-  SITE: 'Site',
-  WHATSAPP: 'WhatsApp',
-  INDICACAO: 'Indicação',
-  PORTAL_ZAP: 'Portal Zap',
-  PORTAL_VIVAREAL: 'Portal VivaReal',
-  PORTAL_OLX: 'Portal OLX',
-  REDES_SOCIAIS: 'Redes Sociais',
-  TELEFONE: 'Telefone',
-  VISITA_ESCRITORIO: 'Visita ao Escritório',
-  OUTRO: 'Outro',
-}
-
-const statusLabels: Record<string, string> = {
-  NOVO: 'Novo',
-  CONTATO_REALIZADO: 'Contato Realizado',
-  QUALIFICADO: 'Qualificado',
-  VISITA_AGENDADA: 'Visita Agendada',
-  PROPOSTA_ENVIADA: 'Proposta Enviada',
-  NEGOCIACAO: 'Negociação',
-  FECHADO_GANHO: 'Fechado (Ganho)',
-  FECHADO_PERDIDO: 'Fechado (Perdido)',
-}
-
-const statusColors: Record<string, string> = {
-  NOVO: 'bg-blue-100 text-blue-800',
-  CONTATO_REALIZADO: 'bg-cyan-100 text-cyan-800',
-  QUALIFICADO: 'bg-purple-100 text-purple-800',
-  VISITA_AGENDADA: 'bg-amber-100 text-amber-800',
-  PROPOSTA_ENVIADA: 'bg-orange-100 text-orange-800',
-  NEGOCIACAO: 'bg-indigo-100 text-indigo-800',
-  FECHADO_GANHO: 'bg-green-100 text-green-800',
-  FECHADO_PERDIDO: 'bg-red-100 text-red-800',
-}
-
-const activityTypeLabels: Record<string, string> = {
-  LEAD_CRIADO: 'Lead Criado',
-  LEAD_ATUALIZADO: 'Lead Atualizado',
-  LEAD_STATUS_ALTERADO: 'Status Alterado',
-  CONTATO_REALIZADO: 'Contato Realizado',
-  VISITA_AGENDADA: 'Visita Agendada',
-  VISITA_REALIZADA: 'Visita Realizada',
-  PROPOSTA_ENVIADA: 'Proposta Enviada',
-  NEGOCIACAO_INICIADA: 'Negociação Iniciada',
-  VENDA_REALIZADA: 'Venda Realizada',
-  COMENTARIO_ADICIONADO: 'Comentário Adicionado',
-}
-
-const visitStatusLabels: Record<string, string> = {
-  AGENDADA: 'Agendada',
-  CONFIRMADA: 'Confirmada',
-  REALIZADA: 'Realizada',
-  CANCELADA: 'Cancelada',
-  REMARCADA: 'Remarcada',
-  NAO_COMPARECEU: 'Não Compareceu',
-}
-
-const visitStatusColors: Record<string, string> = {
-  AGENDADA: 'bg-blue-100 text-blue-800',
-  CONFIRMADA: 'bg-green-100 text-green-800',
-  REALIZADA: 'bg-emerald-100 text-emerald-800',
-  CANCELADA: 'bg-red-100 text-red-800',
-  REMARCADA: 'bg-amber-100 text-amber-800',
-  NAO_COMPARECEU: 'bg-crm-bg-hover text-crm-text-primary',
-}
+const sourceLabels = (source: string) => getEnumLabel('LeadSource', source)
+const statusLabels = (status: string) => getEnumLabel('LeadStatus', status)
+const statusColors = enumColors.LeadStatus || {}
+const activityTypeLabels = (type: string) => getEnumLabel('ActivityType', type)
+const visitStatusLabels = (status: string) => getEnumLabel('VisitStatus', status)
+const visitStatusColors = enumColors.VisitStatus || {}
 
 export default function AttendanceDetailContent({ lead, user }: Props) {
   const router = useRouter()
@@ -265,13 +207,13 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900">{lead.name}</h1>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[lead.status] || 'bg-crm-bg-hover text-crm-text-primary'}`}>
-                  {statusLabels[lead.status] || lead.status}
+                  {statusLabels(lead.status)}
                 </span>
               </div>
               <div className="flex items-center gap-4 mt-1 text-sm text-crm-text-muted">
                 <span>Criado em {formatDate(lead.createdAt)}</span>
                 <span>•</span>
-                <span>Origem: {sourceLabels[lead.source] || lead.source}</span>
+                <span>Origem: {sourceLabels(lead.source)}</span>
                 <span>•</span>
                 <span className={`font-semibold ${getScoreColor(lead.score)}`}>
                   Score: {lead.score}
@@ -563,7 +505,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                       <div className="flex-1 bg-crm-bg-elevated rounded-lg p-4">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-medium text-gray-900">
-                            {activityTypeLabels[activity.type] || activity.type}
+                            {activityTypeLabels(activity.type)}
                           </span>
                           <span className="text-xs text-crm-text-muted">
                             {getTimeAgo(activity.createdAt)}
@@ -620,7 +562,7 @@ export default function AttendanceDetailContent({ lead, user }: Props) {
                           visitStatusColors[visit.status] || 'bg-crm-bg-hover text-crm-text-primary'
                         }`}
                       >
-                        {visitStatusLabels[visit.status] || visit.status}
+                        {visitStatusLabels(visit.status)}
                       </span>
                     </div>
                   </div>
